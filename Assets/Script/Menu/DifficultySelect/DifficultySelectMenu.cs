@@ -35,6 +35,7 @@ namespace YARG.Menu.DifficultySelect
             Instrument,
             Difficulty,
             Modifiers,
+            Powers,
             Harmony
         }
 
@@ -97,12 +98,36 @@ namespace YARG.Menu.DifficultySelect
         private readonly List<Difficulty> _possibleDifficulties = new();
         private readonly List<Modifier>   _possibleModifiers    = new();
 
+        private readonly struct PowerEntry
+        {
+            public readonly string LocalizationKey;
+            public readonly PowerChallengeModifiers Flag;
+
+            public PowerEntry(string localizationKey, PowerChallengeModifiers flag)
+            {
+                LocalizationKey = localizationKey;
+                Flag = flag;
+            }
+        }
+
+        private static readonly PowerEntry[] _availablePowers =
+        {
+            new(nameof(PowerChallengeModifiers.StarPowerGenerator), PowerChallengeModifiers.StarPowerGenerator),
+            new(nameof(PowerChallengeModifiers.StarPowerNova), PowerChallengeModifiers.StarPowerNova),
+            new(nameof(PowerChallengeModifiers.StarPowerAmplifier), PowerChallengeModifiers.StarPowerAmplifier),
+            new(nameof(PowerChallengeModifiers.MultiplierExtender), PowerChallengeModifiers.MultiplierExtender),
+        };
+
         [NonSerialized]
         private Modifier _excusableModifiers;
 
         private int _maxHarmonyIndex = 3;
 
+        private const int MAX_ACTIVE_POWERS = 2;
+
         private readonly List<ModifierItem> _modifierItems = new();
+
+        private readonly List<ModifierItem> _powerItems = new();
 
         private List<SongEntry> _songList;
 
@@ -113,7 +138,7 @@ namespace YARG.Menu.DifficultySelect
 
         private void OnEnable()
         {
-            string subHeaderKey = GlobalVariables.State.IsPractice ? "Practice" : "Quickplay";
+            string subHeaderKey = GlobalVariables.State.IsPractice ? "Practice" : GlobalVariables.State.IsPowerChallenge ? "PowerChallenge" : "Quickplay";
             _subHeader.text = Localize.Key("Menu.Main.Options", subHeaderKey);
 
             // Set navigation scheme
@@ -248,6 +273,9 @@ namespace YARG.Menu.DifficultySelect
                 case State.Modifiers:
                     CreateModifierMenu();
                     break;
+                case State.Powers:
+                    CreatePowersMenu();
+                    break;
                 case State.Harmony:
                     CreateHarmonyMenu();
                     break;
@@ -298,7 +326,7 @@ namespace YARG.Menu.DifficultySelect
             if (_possibleInstruments.Count > 0)
             {
                 // Ready button
-                CreateItem(LocalizeHeader("Ready"), _lastMenuState == State.Main, _difficultyGreenPrefab, () =>
+                var readyItem = CreateItem(LocalizeHeader("Ready"), _lastMenuState == State.Main, _difficultyGreenPrefab, () =>
                 {
                     // If the player just selected vocal modifiers, don't show them again
                     if (player.Profile.GameMode == GameMode.Vocals &&
@@ -309,6 +337,12 @@ namespace YARG.Menu.DifficultySelect
 
                     ChangePlayer(1);
                 });
+
+                // In Power Challenge mode, you must pick two powers before continuing (except for Vocals, since none of the powers affect it yet)
+                if (GlobalVariables.State.IsPowerChallenge && player.Profile.GameMode != GameMode.Vocals)
+                {
+                    readyItem.Interactable = CountActivePowers(player.ActivePowers) == MAX_ACTIVE_POWERS;
+                }
 
                 CreateItem(LocalizeHeader("Instrument"),
                     GetInstrumentDisplayName(player.Profile.CurrentInstrument, player.Profile.GameMode),
@@ -367,6 +401,34 @@ namespace YARG.Menu.DifficultySelect
                         modifierText, _lastMenuState == State.Modifiers, () =>
                     {
                         _menuState = State.Modifiers;
+                        UpdateForPlayer();
+                    });
+                }
+
+                // Power Challenge: pick which powers are active for this song
+                if (GlobalVariables.State.IsPowerChallenge && player.Profile.GameMode != GameMode.Vocals)
+                {
+                    string powersText;
+                    if (player.ActivePowers == PowerChallengeModifiers.None)
+                    {
+                        powersText = Localize.Key("Menu.PowerSelect", "None");
+                    }
+                    else
+                    {
+                        var names = new List<string>();
+                        foreach (var power in _availablePowers)
+                        {
+                            if (player.ActivePowers.HasFlag(power.Flag))
+                            {
+                                names.Add(Localize.Key("Menu.PowerSelect", power.LocalizationKey));
+                            }
+                        }
+                        powersText = string.Join("\n", names);
+                    }
+
+                    CreateItem(LocalizeHeader("Powers"), powersText, _lastMenuState == State.Powers, () =>
+                    {
+                        _menuState = State.Powers;
                         UpdateForPlayer();
                     });
                 }
@@ -506,6 +568,70 @@ namespace YARG.Menu.DifficultySelect
             });
 
             _navGroup.SelectFirst();
+        }
+
+        private void CreatePowersMenu()
+        {
+            var player = CurrentPlayer;
+
+            _powerItems.Clear();
+            foreach (var power in _availablePowers)
+            {
+                var btn = Instantiate(_modifierItemPrefab, _container);
+                btn.Initialize(Localize.Key("Menu.PowerSelect", power.LocalizationKey), player.ActivePowers.HasFlag(power.Flag), active =>
+                {
+                    if (active)
+                    {
+                        player.ActivePowers |= power.Flag;
+                    }
+                    else
+                    {
+                        player.ActivePowers &= ~power.Flag;
+                    }
+
+                    UpdatePowersMenu();
+                });
+
+                _navGroup.AddNavigatable(btn);
+                _powerItems.Add(btn);
+            }
+
+            // Done button
+            CreateItem(LocalizeHeader("Done"), _difficultyGreenPrefab, () =>
+            {
+                _menuState = State.Main;
+                UpdateForPlayer();
+            });
+
+            UpdatePowersMenu();
+            _navGroup.SelectFirst();
+        }
+
+        private void UpdatePowersMenu()
+        {
+            var player = CurrentPlayer;
+            bool atLimit = CountActivePowers(player.ActivePowers) >= MAX_ACTIVE_POWERS;
+
+            for (int i = 0; i < _powerItems.Count; i++)
+            {
+                bool active = player.ActivePowers.HasFlag(_availablePowers[i].Flag);
+
+                _powerItems[i].Interactable = active || !atLimit;
+            }
+        }
+
+        private static int CountActivePowers(PowerChallengeModifiers powers)
+        {
+            int count = 0;
+            foreach (var power in _availablePowers)
+            {
+                if (powers.HasFlag(power.Flag))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         private void CreateHarmonyMenu()
@@ -742,7 +868,7 @@ namespace YARG.Menu.DifficultySelect
             Navigator.Instance.PopScheme();
         }
 
-        private void CreateItem(string header, string body, bool selected, DifficultyItem difficultyItem, UnityAction a)
+        private DifficultyItem CreateItem(string header, string body, bool selected, DifficultyItem difficultyItem, UnityAction a)
         {
             var btn = Instantiate(difficultyItem, _container);
 
@@ -761,21 +887,23 @@ namespace YARG.Menu.DifficultySelect
             {
                 _navGroup.SelectLast();
             }
+
+            return btn;
         }
 
-        private void CreateItem(string body, bool selected, DifficultyItem difficultyItem, UnityAction a)
+        private DifficultyItem CreateItem(string body, bool selected, DifficultyItem difficultyItem, UnityAction a)
         {
-            CreateItem(null, body, selected, difficultyItem, a);
+            return CreateItem(null, body, selected, difficultyItem, a);
         }
 
-        private void CreateItem(string header, string body, bool selected, UnityAction a)
+        private DifficultyItem CreateItem(string header, string body, bool selected, UnityAction a)
         {
-            CreateItem(header, body, selected, _difficultyItemPrefab, a);
+            return CreateItem(header, body, selected, _difficultyItemPrefab, a);
         }
 
-        private void CreateItem(string body, bool selected, UnityAction a)
+        private DifficultyItem CreateItem(string body, bool selected, UnityAction a)
         {
-            CreateItem(null, body, selected, a);
+            return CreateItem(null, body, selected, a);
         }
 
         private string LocalizeHeader(string key)

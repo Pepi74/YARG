@@ -15,6 +15,25 @@ namespace YARG.Menu.DifficultySelect
         [field: SerializeField]
         public NavigatableButton Button { get; private set; }
 
+        private bool _interactable = true;
+
+        private void LateUpdate()
+        {
+            float alpha = _interactable ? 1f : 0.4f;
+            _header.alpha = alpha;
+            _body.alpha = alpha;
+        }
+
+        public bool Interactable
+        {
+            get => Button.Interactable;
+            set
+            {
+                Button.Interactable = value;
+                _interactable = value;
+            }
+        }
+
         public void Initialize(string header, string body, UnityAction action)
         {
             _header.gameObject.SetActive(true);

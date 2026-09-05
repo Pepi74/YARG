@@ -10,6 +10,8 @@ namespace YARG.Menu.Navigation
         [SerializeField]
         private Button.ButtonClickedEvent _onClick = new();
 
+        public bool Interactable { get; set; } = true;
+
         public override void OnPointerDown(PointerEventData eventData)
         {
             base.OnPointerDown(eventData);
@@ -18,6 +20,11 @@ namespace YARG.Menu.Navigation
 
         public override void Confirm()
         {
+            if (!Interactable)
+            {
+                return;
+            }
+            
             _onClick.Invoke();
         }
 
