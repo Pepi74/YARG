@@ -66,7 +66,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1007692541323341066, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
       propertyPath: m_Size
-      value: 0.5036675
+      value: 0.51307595
       objectReference: {fileID: 0}
     - target: {fileID: 1007692541323341066, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
       propertyPath: m_Value
@@ -82,6 +82,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1087726098963387228, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
       propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1087726098963387228, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1087726098963387228, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
@@ -502,7 +506,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2885240813551093153, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
       propertyPath: m_Name
-      value: GuitarScoreCard 2
+      value: GuitarScoreCard
       objectReference: {fileID: 0}
     - target: {fileID: 2885240813714138371, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
       propertyPath: m_AnchorMax.y
@@ -694,7 +698,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3556549128266375841, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 378
+      value: 350.22223
       objectReference: {fileID: 0}
     - target: {fileID: 3556549128266375841, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -1544,6 +1548,7 @@ MonoBehaviour:
   _difficulty: {fileID: 3597548311603406339}
   _score: {fileID: 3597548311727217331}
   _starView: {fileID: 4763736341791391498}
+  _powerChallengeStarView: {fileID: 5791818963914450538}
   _difficultyRing: {fileID: 7717116036281666166}
   _modifierIconContainer: {fileID: 1657044308562515852}
   _instrumentIcon: {fileID: 3701078943892931676}
@@ -1662,6 +1667,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5791818963914450538 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5298428551940022970, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}
+  m_PrefabInstance: {fileID: 1866566241013056720}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e1b768a9451abbc4286fced04229a952, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YARG.Menu.PowerChallengeStarCountView
 --- !u!224 &6984339641605108522 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8721849586468845562, guid: 2025f8ef58ef1ef46a59478fdc3fe13d, type: 3}

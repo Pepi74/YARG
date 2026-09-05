@@ -47,6 +47,8 @@ namespace YARG.Menu.ScoreScreen
         [SerializeField]
         private StarView _starView;
         [SerializeField]
+        private PowerChallengeStarCountView _powerChallengeStarView;
+        [SerializeField]
         private DifficultyRing _difficultyRing;
         [SerializeField]
         private Transform _modifierIconContainer;
@@ -199,7 +201,18 @@ namespace YARG.Menu.ScoreScreen
             }
 
             _score.text = Stats.TotalScore.ToString("N0");
-            _starView.SetStars((int) Stats.Stars);
+            if (GlobalVariables.State.IsPowerChallenge)
+            {
+                _starView.gameObject.SetActive(false);
+                _powerChallengeStarView.gameObject.SetActive(true);
+                _powerChallengeStarView.SetStars((int) Stats.Stars, YargPlayer.POWER_CHALLENGE_MAX_STARS);
+            }
+            else
+            {
+                _starView.gameObject.SetActive(true);
+                _powerChallengeStarView.gameObject.SetActive(false);
+                _starView.SetStars((int) Stats.Stars);
+            }
 
             _notesHit.text = $"{ColorizePrimary(Stats.NotesHit)} / {ColorizeSecondary(Stats.TotalNotes)}";
             _maxStreak.text = ColorizePrimary(Stats.MaxCombo);
