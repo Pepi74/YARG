@@ -14,13 +14,15 @@ namespace YARG.Gameplay.HUD
         private const int LAST_STAR = MAX_STARS - 1;
 
         [SerializeField]
-        private Image _notObtainedIcon;
+        private Image _emptyStar;
         [SerializeField]
-        private Image _obtainedIcon;
+        private Image _completedStar;
         [SerializeField]
-        private Image _progressRing;
+        private Image _starProgress;
         [SerializeField]
-        private Image _goldOverlay;
+        private Image _completedGold;
+        [SerializeField]
+        private Image _white;
 
         [Space]
         [SerializeField]
@@ -58,8 +60,10 @@ namespace YARG.Gameplay.HUD
 
             _goldSequence = DOTween.Sequence()
                 .Append(t.DOScale(_baseScale * 1.6f, 0.25f))
-                .Join(_goldOverlay.DOFade(1f, 0.25f))
+                .Insert(0.04f, _white.DOFade(1f, 0.21f))
                 .Append(t.DOScale(_baseScale, 0.25f))
+                .Insert(0.25f, _white.DOFade(0f, 0.25f))
+                .Insert(0.25f, _completedGold.DOFade(1f, 0.25f))
                 .SetAutoKill(false).Pause().SetLink(gameObject);
         }
 
@@ -79,18 +83,15 @@ namespace YARG.Gameplay.HUD
             _isGoldAchieved = false;
             _hasObtainedFirstStar = false;
 
-            _notObtainedIcon.gameObject.SetActive(true);
-            _obtainedIcon.gameObject.SetActive(false);
+            _emptyStar.gameObject.SetActive(true);
+            _completedStar.gameObject.SetActive(false);
 
-            _progressRing.gameObject.SetActive(true);
-            _progressRing.fillAmount = 0;
+            _starProgress.gameObject.SetActive(true);
+            _starProgress.fillAmount = 0;
 
             _goldProgressGroup.gameObject.SetActive(false);
             _goldProgress.fillAmount = 0;
             _goldProgressLine.rectTransform.anchoredPosition = Vector2.zero;
-
-            var goldColor = _goldOverlay.color;
-            _goldOverlay.color = new Color(goldColor.r, goldColor.g, goldColor.b, 0f);
 
             _countText.text = string.Empty;
 
@@ -115,8 +116,8 @@ namespace YARG.Gameplay.HUD
                 if (!_hasObtainedFirstStar)
                 {
                     _hasObtainedFirstStar = true;
-                    _notObtainedIcon.gameObject.SetActive(false);
-                    _obtainedIcon.gameObject.SetActive(true);
+                    _emptyStar.gameObject.SetActive(false);
+                    _completedStar.gameObject.SetActive(true);
                 }
 
                 if (_highestStarReached < MAX_STARS)
@@ -128,7 +129,7 @@ namespace YARG.Gameplay.HUD
 
             if (topStar >= MAX_STARS)
             {
-                _progressRing.gameObject.SetActive(false);
+                _starProgress.gameObject.SetActive(false);
                 _goldProgressGroup.gameObject.SetActive(false);
 
                 if (!_isGoldAchieved)
@@ -143,7 +144,7 @@ namespace YARG.Gameplay.HUD
 
             if (topStar >= LAST_STAR)
             {
-                _progressRing.gameObject.SetActive(false);
+                _starProgress.gameObject.SetActive(false);
                 _goldProgressGroup.gameObject.SetActive(true);
                 _goldProgress.fillAmount = starProgress;
                 _goldProgressLine.rectTransform.anchoredPosition = new Vector2(0, starProgress * _goldMeterHeight);
@@ -151,8 +152,8 @@ namespace YARG.Gameplay.HUD
             else
             {
                 _goldProgressGroup.gameObject.SetActive(false);
-                _progressRing.gameObject.SetActive(true);
-                _progressRing.fillAmount = starProgress;
+                _starProgress.gameObject.SetActive(true);
+                _starProgress.fillAmount = starProgress;
             }
         }
     }
