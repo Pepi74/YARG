@@ -147,8 +147,9 @@ namespace YARG.Assets.Script.Gameplay.Player
 
             if (!Player.IsReplay)
             {
+                var (maxMultiplierBonus, starPowerMultiplier, starPowerPhraseGainPercent, starPowerGeneratorStreakPercent) = Player.GetPowerChallengeEngineOptions();
                 // Create the engine params from the engine preset
-                EngineParams = Player.EnginePreset.ProKeys.Create(StarMultiplierThresholds, SoloBonusStarMultiplierThresholds, isBass);
+                EngineParams = Player.EnginePreset.ProKeys.Create(YargPlayer.GetStarMultiplierThresholds(StarMultiplierThresholds), YargPlayer.GetStarMultiplierThresholds(SoloBonusStarMultiplierThresholds), isBass, maxMultiplierBonus: maxMultiplierBonus, starPowerMultiplier: starPowerMultiplier, starPowerPhraseGainPercent: starPowerPhraseGainPercent, starPowerGeneratorStreakPercent: starPowerGeneratorStreakPercent);
                 //EngineParams = EnginePreset.Precision.FiveFretGuitar.Create(StarMultiplierThresholds, isBass);
             }
             else

@@ -46,6 +46,9 @@ namespace YARG.Gameplay.HUD
         [SerializeField]
         private StarScoreDisplay _starScoreDisplay;
 
+        [SerializeField]
+        private PowerChallengeStarDisplay _powerChallengeStarDisplay;
+
         [Space]
         [SerializeField]
         private ProgressBarFadedEdge _songProgressBar;
@@ -117,6 +120,15 @@ namespace YARG.Gameplay.HUD
         protected override void OnChartLoaded(SongChart chart)
         {
             _bandComboObject.SetActive(SettingsManager.Settings.BandComboTypeSetting.Value != BandComboType.Off);
+
+            bool isPowerChallenge = GameManager.IsPowerChallenge;
+            _starScoreDisplay.gameObject.SetActive(!isPowerChallenge);
+            _powerChallengeStarDisplay.gameObject.SetActive(isPowerChallenge);
+
+            if (isPowerChallenge)
+            {
+                _powerChallengeStarDisplay.ResetDisplay();
+            }
         }
 
         protected override void OnSongStarted()
@@ -157,7 +169,14 @@ namespace YARG.Gameplay.HUD
                 scoreTextLength += Math.Floor((scoreTextLength - 1) / 3); // thousand coma separators
 
 
-                _starScoreDisplay.SetStars(GameManager.BandStars);
+                if (GameManager.IsPowerChallenge)
+                {
+                    _powerChallengeStarDisplay.SetStars(GameManager.BandStars);
+                }
+                else
+                {
+                    _starScoreDisplay.SetStars(GameManager.BandStars);
+                }
 
                 // Trigger easter egg
                 if (!_easterEggTriggered && scoreTextLength > _characterCountForBreak)

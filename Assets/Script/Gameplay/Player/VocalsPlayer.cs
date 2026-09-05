@@ -166,7 +166,7 @@ namespace YARG.Gameplay.Player
                 var singToActivateStarPower = SettingsManager.Settings.VoiceActivatedVocalStarPower.Value;
 
                 // Create the engine params from the engine preset
-                EngineParams = Player.EnginePreset.Vocals.Create(StarMultiplierThresholds, SoloBonusStarMultiplierThresholds,
+                EngineParams = Player.EnginePreset.Vocals.Create(YargPlayer.GetStarMultiplierThresholds(StarMultiplierThresholds), YargPlayer.GetStarMultiplierThresholds(SoloBonusStarMultiplierThresholds),
                     Player.Profile.CurrentDifficulty, MicDevice.UPDATES_PER_SECOND, singToActivateStarPower);
             }
             else

@@ -14,6 +14,7 @@ using YARG.Core.Logging;
 using YARG.Core.Replays;
 using YARG.Gameplay.Visuals;
 using YARG.Helpers.Extensions;
+using YARG.Player;
 
 namespace YARG.Gameplay.Player
 {
@@ -133,8 +134,9 @@ namespace YARG.Gameplay.Player
         {
             if (!Player.IsReplay)
             {
+                var (maxMultiplierBonus, starPowerMultiplier, starPowerPhraseGainPercent, starPowerGeneratorStreakPercent) = Player.GetPowerChallengeEngineOptions();
                 // Create the engine params from the engine preset
-                EngineParams = Player.EnginePreset.ProKeys.Create(StarMultiplierThresholds, SoloBonusStarMultiplierThresholds, false);
+                EngineParams = Player.EnginePreset.ProKeys.Create(YargPlayer.GetStarMultiplierThresholds(StarMultiplierThresholds), YargPlayer.GetStarMultiplierThresholds(SoloBonusStarMultiplierThresholds), false, maxMultiplierBonus: maxMultiplierBonus, starPowerMultiplier: starPowerMultiplier, starPowerPhraseGainPercent: starPowerPhraseGainPercent, starPowerGeneratorStreakPercent: starPowerGeneratorStreakPercent);
             }
             else
             {
