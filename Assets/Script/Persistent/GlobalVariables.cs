@@ -262,5 +262,13 @@ namespace YARG
         {
             return FindObjectsByType<LocalizeText>(FindObjectsSortMode.None);
         }
+
+        // Resets per-song persistent state for returning to the menu. All-Powerful stays sticky across consecutive Power Challenge songs on purpose — it only turns off via the popup's explicit toggle, or automatically once MusicLibraryMenu detects we've left Power Challenge browsing.
+        public static void ResetPersistentState()
+        {
+            var isAllPowerful = State.IsAllPowerful;
+            State = PersistentState.Default;
+            State.IsAllPowerful = isAllPowerful;
+        }
     }
 }
