@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5391028189844966199}
   - component: {fileID: 7640503208866272875}
   m_Layer: 5
-  m_Name: Icon
+  m_Name: Complete
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -271,6 +271,7 @@ RectTransform:
   - {fileID: 3776117056832322936}
   - {fileID: 1591593731150733512}
   - {fileID: 5530738523509908461}
+  - {fileID: 2336590145862297637}
   - {fileID: 5989373197795706567}
   - {fileID: 8963516858391503478}
   m_Father: {fileID: 1682100933276730677}
@@ -292,10 +293,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4348de94b07c69b4ebda2544986423d7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.HUD.PowerChallengeStarDisplay
-  _notObtainedIcon: {fileID: 8273332769075714234}
-  _obtainedIcon: {fileID: 7640503208866272875}
-  _progressRing: {fileID: 1017005005488127361}
-  _goldOverlay: {fileID: 8408209581001186403}
+  _emptyStar: {fileID: 8273332769075714234}
+  _completedStar: {fileID: 7640503208866272875}
+  _starProgress: {fileID: 1017005005488127361}
+  _completedGold: {fileID: 8408209581001186403}
+  _white: {fileID: 173726605890186949}
   _goldProgressGroup: {fileID: 2780323895924729393}
   _goldProgress: {fileID: 8700586412200364752}
   _goldProgressLine: {fileID: 5046508685485239765}
@@ -907,6 +909,81 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!1 &1813774444472639190
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2336590145862297637}
+  - component: {fileID: 6535122773863252391}
+  - component: {fileID: 173726605890186949}
+  m_Layer: 5
+  m_Name: White
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &2336590145862297637
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813774444472639190}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8370474718048840841}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 80, y: 80}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &6535122773863252391
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813774444472639190}
+  m_CullTransparentMesh: 1
+--- !u!114 &173726605890186949
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1813774444472639190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: eb542f774abd4e44fb5b03b5371d7fc4, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &1998868017521524377
 GameObject:
   m_ObjectHideFlags: 0
@@ -1257,7 +1334,7 @@ GameObject:
   - component: {fileID: 3982250120170047791}
   - component: {fileID: 1017005005488127361}
   m_Layer: 5
-  m_Name: Ring
+  m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2552,7 +2629,7 @@ GameObject:
   - component: {fileID: 8579551047677123431}
   - component: {fileID: 8408209581001186403}
   m_Layer: 5
-  m_Name: GoldOverlay
+  m_Name: Gold
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2598,7 +2675,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2702,7 +2779,7 @@ GameObject:
   - component: {fileID: 880271732032849571}
   - component: {fileID: 8273332769075714234}
   m_Layer: 5
-  m_Name: NotObtainedIcon
+  m_Name: Empty
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

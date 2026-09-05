@@ -119,6 +119,7 @@ namespace YARG.Menu.ScoreScreen
         protected bool  IsHighScore;
         protected T     Stats;
         protected bool  IsReplay;
+        protected bool  IsAllPowerful;
 
         public YargPlayer Player { get; private set; }
 
@@ -127,12 +128,13 @@ namespace YARG.Menu.ScoreScreen
             _colorizer = GetComponent<ScoreCardColorizer>();
         }
 
-        public void Initialize(bool isHighScore, YargPlayer player, T stats, bool isReplay)
+        public void Initialize(bool isHighScore, YargPlayer player, T stats, bool isReplay, bool isAllPowerful = false)
         {
             IsHighScore = isHighScore;
             Player = player;
             Stats = stats;
             IsReplay  = isReplay;
+            IsAllPowerful = isAllPowerful;
         }
 
         public virtual void SetCardContents()
@@ -205,7 +207,8 @@ namespace YARG.Menu.ScoreScreen
             {
                 _starView.gameObject.SetActive(false);
                 _powerChallengeStarView.gameObject.SetActive(true);
-                _powerChallengeStarView.SetStars((int) Stats.Stars, YargPlayer.POWER_CHALLENGE_MAX_STARS);
+                int maxStars = IsAllPowerful ? YargPlayer.ALL_POWERFUL_MAX_STARS : YargPlayer.POWER_CHALLENGE_MAX_STARS;
+                _powerChallengeStarView.SetStars(Math.Min((int) Stats.Stars, maxStars), maxStars);
             }
             else
             {

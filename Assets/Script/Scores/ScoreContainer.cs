@@ -120,7 +120,7 @@ namespace YARG.Scores
         }
 
         public static bool IsSoloScoreValid(float songSpeed, YargPlayer player) =>
-            songSpeed >= 1.0f && !player.Profile.IsBot && player.IsScoreValid;
+            songSpeed >= 1.0f && !player.Profile.IsBot && player.IsScoreValid && !GlobalVariables.State.IsAllPowerful;
 
         public static void RecordScore(GameRecord gameRecord, List<PlayerScoreRecord> playerEntries)
         {
