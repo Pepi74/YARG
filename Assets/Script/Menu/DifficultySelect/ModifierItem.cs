@@ -24,6 +24,17 @@ namespace YARG.Menu.DifficultySelect
             }
         }
 
+        private bool _interactable = true;
+        public bool Interactable
+        {
+            get => _interactable;
+            set
+            {
+                _interactable = value;
+                _title.alpha = value ? 1f : 0.4f;
+            }
+        }
+
         private Action<bool> _activeChangedCallback;
 
         public void Initialize(string title, bool active, Action<bool> activeChangedCallback)
@@ -42,6 +53,11 @@ namespace YARG.Menu.DifficultySelect
 
         public override void Confirm()
         {
+            if (!Interactable)
+            {
+                return;
+            }
+            
             base.Confirm();
 
             Active = !Active;

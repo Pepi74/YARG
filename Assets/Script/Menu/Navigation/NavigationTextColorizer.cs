@@ -58,5 +58,15 @@ namespace YARG.Menu.Navigation
         {
             _navigatableBehaviour.SelectionStateChanged -= OnSelectionStateChanged;
         }
+
+        public void RefreshDefaultColors()
+        {
+            for (int i = 0; i < _texts.Length; i++)
+            {
+                _defaultColors[i] = _texts[i].color;
+            }
+
+            OnSelectionStateChanged(_navigatableBehaviour.Selected);
+        }
     }
 }
