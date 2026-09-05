@@ -38,22 +38,28 @@ namespace YARG.Player
         /// Engine tuning values derived from this player's active Power Challenge modifiers.
         /// Falls back to standard (no-power) values outside of Power Challenge.
         /// </summary>
-        public (int MaxMultiplierBonus, int StarPowerMultiplier, int StarPowerPhraseGainPercent, int StarPowerGeneratorStreakPercent) GetPowerChallengeEngineOptions()
+        public (int MaxMultiplierBonus, int StarPowerMultiplier, int StarPowerPhraseGainPercent, int StarPowerGeneratorStreakPercent, int NotesPerMultiplierIncrease, int BaseMultiplierOffset, int SpeedFreakBonusThreshold) GetPowerChallengeEngineOptions()
         {
             if (!GlobalVariables.State.IsPowerChallenge)
             {
-                return (0, 2, 25, 0);
+                return (0, 2, 25, 0, 10, 1, 0);
             }
+
+            bool speedFreak = ActivePowers.HasFlag(PowerChallengeModifiers.SpeedFreak);
 
             return (
                 ActivePowers.HasFlag(PowerChallengeModifiers.MultiplierExtender) ? 2 : 0,
                 ActivePowers.HasFlag(PowerChallengeModifiers.StarPowerNova) ? 6 : 2,
                 ActivePowers.HasFlag(PowerChallengeModifiers.StarPowerAmplifier) ? 100 : 25,
-                ActivePowers.HasFlag(PowerChallengeModifiers.StarPowerGenerator) ? 10 : 0
+                ActivePowers.HasFlag(PowerChallengeModifiers.StarPowerGenerator) ? 10 : 0,
+                speedFreak ? 5 : 10,
+                speedFreak ? 2 : 1,
+                speedFreak ? 3 : 0
             );
         }
 
         public const int POWER_CHALLENGE_MAX_STARS = 21;
+        public const int ALL_POWERFUL_MAX_STARS = 26; // 21 +  5 stars of Speed Freak.
 
         /// <summary>
         /// Extends a 6-star threshold curve up to <see cref="POWER_CHALLENGE_MAX_STARS"/> stars for Power Challenge.

@@ -157,7 +157,7 @@ namespace YARG.Menu.ScoreScreen
             {
                 _bandStarView.gameObject.SetActive(false);
                 _powerChallengeStarView.gameObject.SetActive(true);
-                _powerChallengeStarView.SetStars(scoreScreenStats.BandStars, YargPlayer.POWER_CHALLENGE_MAX_STARS);
+                _powerChallengeStarView.SetStars(scoreScreenStats.BandStars, scoreScreenStats.IsAllPowerful ? YargPlayer.ALL_POWERFUL_MAX_STARS : YargPlayer.POWER_CHALLENGE_MAX_STARS);
             }
             else
             {
@@ -193,7 +193,7 @@ namespace YARG.Menu.ScoreScreen
             MusicLibraryMenu.CurrentlyPlaying = GlobalVariables.State.CurrentSong;
             if (!GlobalVariables.State.PlayingAShow && !_restartingSong)
             {
-                GlobalVariables.State = PersistentState.Default;
+                GlobalVariables.ResetPersistentState();
             }
 
             GlobalAudioHandler.StopSoundEffect(SfxSample.Chatter, 1.0);
@@ -234,7 +234,7 @@ namespace YARG.Menu.ScoreScreen
                     case GameMode.SixFretGuitar:
                     {
                         card = Instantiate(_guitarCardPrefab, _cardContainer);
-                        ((ScoreCard<GuitarStats>)card).Initialize(score.IsHighScore, score.Player, score.Stats as GuitarStats, score.IsReplay);
+                        ((ScoreCard<GuitarStats>)card).Initialize(score.IsHighScore, score.Player, score.Stats as GuitarStats, score.IsReplay, scoreScreenStats.IsAllPowerful);
                         break;
                     }
                     case GameMode.FourLaneDrums:
@@ -242,19 +242,19 @@ namespace YARG.Menu.ScoreScreen
                     case GameMode.EliteDrums:
                     {
                         card = Instantiate(_drumsCardPrefab, _cardContainer);
-                        ((ScoreCard<DrumsStats>)card).Initialize(score.IsHighScore, score.Player, score.Stats as DrumsStats, score.IsReplay);
+                        ((ScoreCard<DrumsStats>)card).Initialize(score.IsHighScore, score.Player, score.Stats as DrumsStats, score.IsReplay, scoreScreenStats.IsAllPowerful);
                         break;
                     }
                     case GameMode.Vocals:
                     {
                         card = Instantiate(_vocalsCardPrefab, _cardContainer);
-                        ((ScoreCard<VocalsStats>)card).Initialize(score.IsHighScore, score.Player, score.Stats as VocalsStats, score.IsReplay);
+                        ((ScoreCard<VocalsStats>)card).Initialize(score.IsHighScore, score.Player, score.Stats as VocalsStats, score.IsReplay, scoreScreenStats.IsAllPowerful);
                         break;
                     }
                     case GameMode.ProKeys:
                     {
                         card = Instantiate(_keysCardPrefab, _cardContainer);
-                        ((ScoreCard<KeysStats>) card).Initialize(score.IsHighScore, score.Player, score.Stats as KeysStats, score.IsReplay);
+                        ((ScoreCard<KeysStats>) card).Initialize(score.IsHighScore, score.Player, score.Stats as KeysStats, score.IsReplay, scoreScreenStats.IsAllPowerful);
                         break;
                     }
                 }

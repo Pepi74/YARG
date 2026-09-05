@@ -298,10 +298,12 @@
             "WarningVocalistNoMicrophone" : "This vocalist has no microphone assigned! Assign one from the Profiles menu."
         },
         "PowerSelect": {
+            "SpeedFreak": "Speed Freak+",
             "StarPowerGenerator": "Star Power Generator+",
-            "StarPowerNova": "Star Power Nova+",
             "StarPowerAmplifier": "Star Power Amplifier+",
+            "StarPowerNova": "Star Power Nova+",
             "MultiplierExtender": "Multiplier Extender+",
+            "AllPowerful": "All-Powerful",
             "None": "None"
         },
         "History": {
@@ -404,7 +406,9 @@
                     "ViewSongFolder": "View Song Folder",
                     "CopySongChecksum": "Copy Song Checksum",
                     "CollapseAll": "Collapse All",
-                    "ExpandAll": "Expand All"
+                    "ExpandAll": "Expand All",
+                    "EnableAllPowerful": "Enable All-Powerful",
+                    "DisableAllPowerful": "Disable All-Powerful"
                 }
             },
             "Back": "BACK",

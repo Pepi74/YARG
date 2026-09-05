@@ -149,11 +149,19 @@ namespace YARG.Menu.DifficultySelect
 
         private static readonly PowerEntry[] _availablePowers =
         {
+            new(nameof(PowerChallengeModifiers.SpeedFreak), PowerChallengeModifiers.SpeedFreak),
             new(nameof(PowerChallengeModifiers.StarPowerGenerator), PowerChallengeModifiers.StarPowerGenerator),
-            new(nameof(PowerChallengeModifiers.StarPowerNova), PowerChallengeModifiers.StarPowerNova),
             new(nameof(PowerChallengeModifiers.StarPowerAmplifier), PowerChallengeModifiers.StarPowerAmplifier),
+            new(nameof(PowerChallengeModifiers.StarPowerNova), PowerChallengeModifiers.StarPowerNova),
             new(nameof(PowerChallengeModifiers.MultiplierExtender), PowerChallengeModifiers.MultiplierExtender),
         };
+
+        // Every currently implemented power, combined. Used to force All-Powerful's loadout. Update this whenever a new power gets implemented.
+        private const PowerChallengeModifiers ALL_POWERFUL_POWERS = PowerChallengeModifiers.SpeedFreak |
+        PowerChallengeModifiers.StarPowerGenerator |
+        PowerChallengeModifiers.StarPowerAmplifier |
+        PowerChallengeModifiers.StarPowerNova |
+        PowerChallengeModifiers.MultiplierExtender;
 
         [NonSerialized]
         private Modifier _excusableModifiers;
@@ -403,6 +411,19 @@ namespace YARG.Menu.DifficultySelect
         {
             var player = CurrentPlayer;
 
+            // Re-applied every time this menu redraws, so the loadout can't drift from All-Powerful even if something else changes ActivePowers in between.
+            if (GlobalVariables.State.IsPowerChallenge)
+            {
+                if (GlobalVariables.State.IsAllPowerful)
+                {
+                    player.ActivePowers = ALL_POWERFUL_POWERS;
+                }
+                else if (player.ActivePowers == ALL_POWERFUL_POWERS)
+                {
+                    player.ActivePowers = PowerChallengeModifiers.None;
+                }
+            }
+
             if (player.IsMissingMicrophone)
             {
                 ShowWarning(Localize.Key("Menu.DifficultySelect.WarningVocalistNoMicrophone"));
@@ -432,8 +453,8 @@ namespace YARG.Menu.DifficultySelect
                     ChangePlayer(1);
                 });
 
-                // In Power Challenge mode, you must pick two powers before continuing (except for Vocals, since none of the powers affect it yet)
-                if (GlobalVariables.State.IsPowerChallenge && player.Profile.GameMode != GameMode.Vocals)
+                // In Power Challenge mode, you must pick two powers before continuing (except for Vocals, since none of the powers affect it yet, and All-Powerful, which already forces every power active)
+                if (GlobalVariables.State.IsPowerChallenge && player.Profile.GameMode != GameMode.Vocals && !GlobalVariables.State.IsAllPowerful)
                 {
                     readyItem.Interactable = CountActivePowers(player.ActivePowers) == MAX_ACTIVE_POWERS;
                 }
@@ -548,7 +569,11 @@ namespace YARG.Menu.DifficultySelect
                 if (GlobalVariables.State.IsPowerChallenge && player.Profile.GameMode != GameMode.Vocals)
                 {
                     string powersText;
-                    if (player.ActivePowers == PowerChallengeModifiers.None)
+                    if (GlobalVariables.State.IsAllPowerful)
+                    {
+                        powersText = Localize.Key("Menu.PowerSelect", "AllPowerful");
+                    }
+                    else if (player.ActivePowers == PowerChallengeModifiers.None)
                     {
                         powersText = Localize.Key("Menu.PowerSelect", "None");
                     }
@@ -565,11 +590,17 @@ namespace YARG.Menu.DifficultySelect
                         powersText = string.Join("\n", names);
                     }
 
-                    CreateItem(LocalizeHeader("Powers"), powersText, _lastMenuState == State.Powers, () =>
+                    var powersItem = CreateItem(LocalizeHeader("Powers"), powersText, _lastMenuState == State.Powers, () =>
                     {
                         _menuState = State.Powers;
                         UpdateForPlayer();
                     });
+
+                    // Nothing to pick while All-Powerful is active, so don't let the player enter that screen.
+                    if (GlobalVariables.State.IsAllPowerful)
+                    {
+                        powersItem.Interactable = false;
+                    }
                 }
             }
 

@@ -129,7 +129,7 @@ namespace YARG.Scores
 
         public static bool IsSoloScoreValid(float songSpeed, YargPlayer player)
         {
-            if (songSpeed < 1.0f || player.Profile.IsBot || !player.IsScoreValid)
+            if (songSpeed < 1.0f || player.Profile.IsBot || !player.IsScoreValid || GlobalVariables.State.IsAllPowerful)
             {
                 return false;
             }

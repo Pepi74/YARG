@@ -29,6 +29,7 @@ namespace YARG
 
         public          bool    IsPractice;
         public          bool    IsPowerChallenge;
+        public          bool    IsAllPowerful;
         public readonly bool    IsReplay => CurrentReplay is not null;
         public          bool    PlayingWithReplay;
         public          double? SavedInputTime;

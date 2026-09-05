@@ -143,6 +143,8 @@ namespace YARG.Gameplay
 
         public bool IsPowerChallenge { get; private set; }
 
+        public bool IsAllPowerful { get; private set; }
+
         public bool IsReplay => ReplayInfo != null && !GlobalVariables.State.PlayingWithReplay;
 
         public int BandScore
@@ -157,7 +159,8 @@ namespace YARG.Gameplay
             set => EngineManager.Combo = value;
         }
 
-        public float BandStars => EngineManager.Stars;
+        public int PowerChallengeMaxStars => IsAllPowerful ? YargPlayer.ALL_POWERFUL_MAX_STARS : YargPlayer.POWER_CHALLENGE_MAX_STARS;
+        public float BandStars => IsPowerChallenge ? Math.Min(EngineManager.Stars, PowerChallengeMaxStars) : EngineManager.Stars;
 
         public int BandMultiplier => EngineManager.BandMultiplier;
 
@@ -211,6 +214,7 @@ namespace YARG.Gameplay
             ReplayInfo = GlobalVariables.State.CurrentReplay;
             IsPractice = GlobalVariables.State.IsPractice && ReplayInfo == null;
             IsPowerChallenge = GlobalVariables.State.IsPowerChallenge && ReplayInfo == null;
+            IsAllPowerful = GlobalVariables.State.IsAllPowerful && IsPowerChallenge;
             _bandComboType = SettingsManager.Settings.BandComboTypeSetting.Value;
 
             Navigator.Instance.PopAllSchemes();
@@ -693,6 +697,7 @@ namespace YARG.Gameplay
                 }).ToArray(),
                 BandScore = BandScore,
                 BandStars = (int) BandStars,
+                IsAllPowerful = IsAllPowerful,
 
                 // TODO: When online comes out, change
                 // .Where(player => !player.Player.Profile.IsBot)
@@ -746,7 +751,7 @@ namespace YARG.Gameplay
                     Score = player.Score,
                     // Stars can't represent Power Challenge's extended scale (StarAmount caps at Gold=6), and this score wasn't achieved under the normal 6-star scoring curve anyway. None is more honest here than an inflated "Gold". The real value lives in PowerChallengeStars.
                     Stars = IsPowerChallenge ? StarAmount.None : StarAmountHelper.GetStarsFromInt((int) player.Stars),
-                    PowerChallengeStars = IsPowerChallenge ? (int) player.Stars : 0,
+                    PowerChallengeStars = IsPowerChallenge ? Math.Min((int) player.Stars, PowerChallengeMaxStars) : 0,
 
                     NotesHit = player.BaseStats.NotesHit,
                     NotesMissed = player.BaseStats.NotesMissed,
@@ -806,7 +811,7 @@ namespace YARG.Gameplay
                 humanBandStars = EngineManager.Stars;
             }
 
-            int rawBandStars = Mathf.FloorToInt(humanBandStars);
+            int rawBandStars = Math.Min(Mathf.FloorToInt(humanBandStars), PowerChallengeMaxStars);
             // Same reasoning as Stars above. None is more honest than an inflated "Gold" for a score that wasn't achieved under the normal 6-star curve.
             var bandStars = IsPowerChallenge || humanCount == 0
                 ? StarAmount.None
@@ -837,7 +842,7 @@ namespace YARG.Gameplay
 
         public void ForceQuitSong()
         {
-            GlobalVariables.State = PersistentState.Default;
+            GlobalVariables.ResetPersistentState();
             GlobalVariables.Instance.LoadScene(SceneIndex.Menu);
         }
 

@@ -284,6 +284,11 @@ namespace YARG.Menu.MusicLibrary
             // Set IsPractice as well
             GlobalVariables.State.IsPractice = LibraryMode == MusicLibraryMode.Practice;
             GlobalVariables.State.IsPowerChallenge = LibraryMode == MusicLibraryMode.PowerChallenge;
+            // All-Powerful only makes sense inside Power Challenge. Clear it whenever we leave that mode, so it can't silently reactivate the next time we come back.
+            if (!GlobalVariables.State.IsPowerChallenge)
+            {
+                GlobalVariables.State.IsAllPowerful = false;
+            }
             GlobalVariables.State.CurrentReplay = null;
             GlobalVariables.State.PlayingWithReplay = false;
 

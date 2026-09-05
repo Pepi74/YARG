@@ -349,6 +349,35 @@ namespace YARG.Menu.MusicLibrary
                 });
             }
 
+            // All-Powerful toggle: only available while browsing Power Challenge, since it has no effect elsewhere.
+            if (MusicLibraryMenu.LibraryMode == MusicLibraryMode.PowerChallenge)
+            {
+                if (!GlobalVariables.State.IsAllPowerful)
+                {
+                    CreateItem("EnableAllPowerful", () =>
+                    {
+                        GlobalVariables.State.IsAllPowerful = true;
+                        gameObject.SetActive(false);
+                    });
+                }
+                else
+                {
+                    CreateItem("DisableAllPowerful", () =>
+                    {
+                        GlobalVariables.State.IsAllPowerful = false;
+
+                        // Clear the forced loadout so it doesn't carry over into normal Power Challenge play.
+                        var player = PlayerContainer.Players.FirstOrDefault();
+                        if (player != null)
+                        {
+                            player.ActivePowers = PowerChallengeModifiers.None;
+                        }
+
+                        gameObject.SetActive(false);
+                    });
+                }
+            }
+
             // Only show these options if we are selecting a song
             if (viewType is SongViewType songViewType &&
                 SettingsManager.Settings.ShowAdvancedMusicLibraryOptions.Value)

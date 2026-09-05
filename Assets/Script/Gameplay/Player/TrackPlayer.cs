@@ -51,6 +51,8 @@ namespace YARG.Gameplay.Player
         [SerializeField]
         protected StarpowerBar StarpowerBar;
         [SerializeField]
+        protected SpeedFreakBonusMeter SpeedFreakBonusMeter;
+        [SerializeField]
         protected SunburstEffects SunburstEffects;
         [SerializeField]
         protected IndicatorStripes IndicatorStripes;
@@ -237,7 +239,7 @@ namespace YARG.Gameplay.Player
             var events = NoteTrack.TextEvents;
 
             Engine = CreateEngine();
-            base.ComboMeter.Initialize(player.EnginePreset, Engine.BaseParameters.MaxMultiplier, GameManager.Players.Count > 1, Engine.BaseParameters.StarPowerMultiplier);
+            base.ComboMeter.Initialize(player.EnginePreset, Engine.BaseParameters.MaxMultiplier, GameManager.Players.Count > 1, Engine.BaseParameters.StarPowerMultiplier, Engine.BaseParameters.NotesPerMultiplierIncrease);
 
             Engine.OnComboIncrement += OnComboIncrement;
             Engine.OnComboReset += OnComboReset;
@@ -438,15 +440,17 @@ namespace YARG.Gameplay.Player
 
             var stats = Engine.BaseStats;
 
+            int baseMaxMultiplier = Engine.BaseParameters.BaseMaxMultiplier;
             int maxMultiplier = Engine.BaseParameters.MaxMultiplier;
             if (stats.IsStarPowerActive)
             {
+                baseMaxMultiplier *= Engine.BaseParameters.StarPowerMultiplier;
                 maxMultiplier *= Engine.BaseParameters.StarPowerMultiplier;
             }
 
             double currentStarPowerAmount = Engine.GetStarPowerBarAmount();
 
-            bool groove = stats.ScoreMultiplier == maxMultiplier;
+            bool groove = stats.ScoreMultiplier >= baseMaxMultiplier;
 
             _currentMultiplier = stats.ScoreMultiplier;
 
@@ -461,6 +465,7 @@ namespace YARG.Gameplay.Player
                 : stats.ScoreMultiplier;
 
             ComboMeter.SetCombo(stats.ScoreMultiplier, displayMultiplier, maxMultiplier, stats.Combo, Engine.CodaHasStarted);
+            UpdateSpeedFreakBonusMeter(stats);
             StarpowerBar.SetStarpower(currentStarPowerAmount, stats.IsStarPowerActive, Engine.CodaHasStarted);
             StarpowerBar.UpdateFlash(GameManager.BeatEventHandler.Visual.StrongBeat.CurrentPercentage);
             SunburstEffects.SetSunburstEffects(groove, stats.IsStarPowerActive, _currentMultiplier);
@@ -514,6 +519,27 @@ namespace YARG.Gameplay.Player
                 _didLowerTrack = false;
                 CameraPositioner.Raise(false);
             }
+        }
+
+        private void UpdateSpeedFreakBonusMeter(BaseStats stats)
+        {
+            bool speedFreakActive = stats.SpeedFreakBonusEffectiveThreshold > 0;
+            bool speedFreakMaxedOut = stats.SpeedFreakBonusStars >= 5;
+            bool starsMaxedOut = stats.Stars >= GameManager.PowerChallengeMaxStars;
+
+            if (speedFreakMaxedOut)
+            {
+                SpeedFreakBonusMeter.HideAtFull();
+                return;
+            }
+
+            if (!speedFreakActive || starsMaxedOut)
+            {
+                SpeedFreakBonusMeter.Hide();
+                return;
+            }
+
+            SpeedFreakBonusMeter.SetProgress(stats.SpeedFreakBonusProgress);
         }
 
         private void UpdateNotes(double visualTime)

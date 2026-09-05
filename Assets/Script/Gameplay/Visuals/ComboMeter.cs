@@ -33,12 +33,14 @@ namespace YARG.Gameplay.Visuals
         private Color _soloTapsPresetColor;
 
         private TextMeshPro[] _textCache;
+        private int           _notesPerMultiplierIncrease;
 
-        public void Initialize(EnginePreset preset, int maxMultiplier, bool isMultiplayer, int starPowerMultiplier = 2)
+        public void Initialize(EnginePreset preset, int maxMultiplier, bool isMultiplayer, int starPowerMultiplier = 2, int notesPerMultiplierIncrease = 10)
         {
             _multiplierText.enabled = false;
             _multiplierText.text = string.Empty;
             _textCache = MultiplierTextHelper.CreateMultiplierTextCache(maxMultiplier, _multiplierText, isMultiplayer, starPowerMultiplier);
+            _notesPerMultiplierIncrease = notesPerMultiplierIncrease;
 
             Color color;
 
@@ -76,12 +78,12 @@ namespace YARG.Gameplay.Visuals
                 _multiplierText.enabled = true;
             }
 
-            int index = combo % 10;
-            if (combo != 0 && index == 0)
-            {
-                index = 10;
-            }
-            else if (multiplier == maxMultiplier)
+            int comboWithinTier = combo % _notesPerMultiplierIncrease;
+            int index = comboWithinTier == 0 && combo != 0
+                ? 10
+                : (comboWithinTier * 10) / _notesPerMultiplierIncrease;
+                
+            if (multiplier == maxMultiplier)
             {
                 index = 10;
             }
