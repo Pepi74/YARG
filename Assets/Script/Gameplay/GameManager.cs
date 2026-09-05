@@ -147,6 +147,8 @@ namespace YARG.Gameplay
 
         public bool IsPractice      { get; private set; }
 
+        public bool IsPowerChallenge { get; private set; }
+
         public bool IsReplay => ReplayInfo != null && !GlobalVariables.State.PlayingWithReplay;
 
         public int BandScore
@@ -219,6 +221,7 @@ namespace YARG.Gameplay
             Song = GlobalVariables.State.CurrentSong;
             ReplayInfo = GlobalVariables.State.CurrentReplay;
             IsPractice = GlobalVariables.State.IsPractice && ReplayInfo == null;
+            IsPowerChallenge = GlobalVariables.State.IsPowerChallenge && ReplayInfo == null;
             _bandComboType = SettingsManager.Settings.BandComboTypeSetting.Value;
 
             Navigator.Instance.PopAllSchemes();
@@ -668,7 +671,11 @@ namespace YARG.Gameplay
             try
             {
                 _isReplaySaved = false;
-                replayInfo = SaveReplay(_songRunner.InputTime, ScoreContainer.ScoreReplayDirectory);
+                // Replays are disabled for Power Challenge in v1; scores are still recorded separately below.
+                if (!IsPowerChallenge)
+                {
+                    replayInfo = SaveReplay(_songRunner.InputTime, ScoreContainer.ScoreReplayDirectory);
+                }
             }
             catch (Exception e)
             {
@@ -738,7 +745,9 @@ namespace YARG.Gameplay
                     EnginePresetId = profile.EnginePreset,
 
                     Score = player.Score,
-                    Stars = StarAmountHelper.GetStarsFromInt((int) player.Stars),
+                    // Stars can't represent Power Challenge's extended scale (StarAmount caps at Gold=6), and this score wasn't achieved under the normal 6-star scoring curve anyway. None is more honest here than an inflated "Gold". The real value lives in PowerChallengeStars.
+                    Stars = IsPowerChallenge ? StarAmount.None : StarAmountHelper.GetStarsFromInt((int) player.Stars),
+                    PowerChallengeStars = IsPowerChallenge ? (int) player.Stars : 0,
 
                     NotesHit = player.BaseStats.NotesHit,
                     NotesMissed = player.BaseStats.NotesMissed,
@@ -798,9 +807,11 @@ namespace YARG.Gameplay
                 humanBandStars = EngineManager.Stars;
             }
 
-            var bandStars = humanCount > 0
-                ? StarAmountHelper.GetStarsFromInt(Mathf.FloorToInt(humanBandStars))
-                : StarAmount.None;
+            int rawBandStars = Mathf.FloorToInt(humanBandStars);
+            // Same reasoning as Stars above. None is more honest than an inflated "Gold" for a score that wasn't achieved under the normal 6-star curve.
+            var bandStars = IsPowerChallenge || humanCount == 0
+                ? StarAmount.None
+                : StarAmountHelper.GetStarsFromInt(rawBandStars);
 
             ScoreContainer.RecordScore(new GameRecord
             {
@@ -820,6 +831,8 @@ namespace YARG.Gameplay
                 SongSpeed = SongSpeed,
                 PlayedWithReplay = GlobalVariables.State.PlayingWithReplay,
                 HasBots = HasBots,
+                IsPowerChallenge = IsPowerChallenge,
+                PowerChallengeStars = IsPowerChallenge ? rawBandStars : 0,
             }, playerEntries);
         }
 

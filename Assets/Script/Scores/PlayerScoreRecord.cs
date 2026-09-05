@@ -28,6 +28,7 @@ namespace YARG.Scores
 
         public int        Score { get; set; }
         public StarAmount Stars { get; set; }
+        public int PowerChallengeStars { get; set; }
 
         public int  NotesHit    { get; set; }
         public int  NotesMissed { get; set; }

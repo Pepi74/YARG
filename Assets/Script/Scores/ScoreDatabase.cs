@@ -143,6 +143,33 @@ namespace YARG.Scores
             // Initialize Careers
             Careers = new CareerDatabase(_db);
             Careers.Initialize();
+            amountUpdated = _db.Execute(
+                @"UPDATE GameRecords
+                SET IsPowerChallenge = 0 WHERE IsPowerChallenge IS NULL"
+            );
+
+            if (amountUpdated > 0)
+            {
+                YargLogger.LogFormatDebug("Successfully updated the IsPowerChallenge field on {0} rows.", amountUpdated);
+            }
+
+            amountUpdated = _db.Execute(
+                @"UPDATE GameRecords
+                SET PowerChallengeStars = 0 WHERE PowerChallengeStars IS NULL"
+            );
+            if (amountUpdated > 0)
+            {
+                YargLogger.LogFormatDebug("Successfully updated the PowerChallengeStars field on {0} rows.", amountUpdated);
+            }
+
+            amountUpdated = _db.Execute(
+                @"UPDATE PlayerScores
+                SET PowerChallengeStars = 0 WHERE PowerChallengeStars IS NULL"
+            );
+            if (amountUpdated > 0)
+            {
+                YargLogger.LogFormatDebug("Successfully updated the PowerChallengeStars field on {0} rows.", amountUpdated);
+            }
         }
 
         public void Dispose()
@@ -287,8 +314,10 @@ namespace YARG.Scores
         public List<GameRecord> QueryAllScoresByDate()
         {
             // We don't check for WasPlayedWithReplay here because this is only used by the history menu
+            // NOTE: every read query below filters IsPowerChallenge = 0. Power Challenge scores are recorded but intentionally excluded from normal history/leaderboards.
             return Query<GameRecord>(
                 @"SELECT * FROM GameRecords
+                WHERE IsPowerChallenge = 0
                 ORDER BY Date DESC"
             );
         }
@@ -297,6 +326,7 @@ namespace YARG.Scores
         {
             return Query<PlayerScoreRecord>(
                 @"SELECT * FROM PlayerScores
+                WHERE IsPowerChallenge = 0
                 ORDER BY Id;"
             );
         }
@@ -307,9 +337,11 @@ namespace YARG.Scores
             return Query<GameRecord>(
                 @"SELECT gr.* FROM GameRecords gr
                 WHERE gr.PlayedWithReplay = 0
+                    AND gr.IsPowerChallenge = 0
                     AND gr.Id = (
                         SELECT gr2.Id FROM GameRecords gr2
                         WHERE gr2.PlayedWithReplay = 0
+                            AND gr2.IsPowerChallenge = 0
                             AND gr2.SongChecksum = gr.SongChecksum
                         ORDER BY gr2.BandScore DESC
                         LIMIT 1
@@ -323,6 +355,7 @@ namespace YARG.Scores
                 @"SELECT * FROM GameRecords
                 WHERE SongChecksum = ?
                     AND PlayedWithReplay = 0
+                    AND IsPowerChallenge = 0
                 ORDER BY BandScore DESC
                 LIMIT 1",
                 songChecksum.HashBytes
@@ -332,9 +365,11 @@ namespace YARG.Scores
         public List<PlayerScoreRecord> QueryPlayerScores(Guid playerId)
         {
             return Query<PlayerScoreRecord>(
-                @"SELECT * FROM PlayerScores
+                @"SELECT PlayerScores.* FROM PlayerScores
+                INNER JOIN GameRecords ON PlayerScores.GameRecordId = GameRecords.Id
                 WHERE PlayerId = ?
-                AND IsReplay = 0",
+                AND IsReplay = 0
+                AND GameRecords.IsPowerChallenge = 0",
                 playerId
             );
         }
@@ -369,6 +404,7 @@ namespace YARG.Scores
                     WHERE ps.PlayerId = ?
                         AND ps.Instrument = ?{difficultyFilter}
                         AND ps.IsReplay = 0
+                        AND gr.IsPowerChallenge = 0
                 )
                 SELECT * FROM RankedScores WHERE ScoreRank = 1";
 
@@ -415,6 +451,7 @@ namespace YARG.Scores
                     WHERE ps.PlayerId = ?
                         AND ps.Instrument = ?{difficultyFilter}
                         AND ps.IsReplay = 0
+                        AND gr.IsPowerChallenge = 0
                 )
                 SELECT * FROM RankedScores WHERE ScoreRank = 1";
 
@@ -448,7 +485,8 @@ namespace YARG.Scores
                 WHERE GameRecords.SongChecksum = ?
                     AND PlayerScores.PlayerId = ?
                     AND PlayerScores.Instrument = ?
-                    AND PlayerScores.IsReplay = 0";
+                    AND PlayerScores.IsReplay = 0
+                    AND GameRecords.IsPowerChallenge = 0";
 
             if (currentDifficultyOnly)
             {
@@ -496,7 +534,8 @@ namespace YARG.Scores
                 WHERE GameRecords.SongChecksum = ?
                     AND PlayerScores.PlayerId = ?
                     AND PlayerScores.Instrument = ?
-                    AND PlayerScores.IsReplay = 0";
+                    AND PlayerScores.IsReplay = 0
+                    AND GameRecords.IsPowerChallenge = 0";
 
             if (currentDifficultyOnly)
             {
@@ -534,6 +573,7 @@ namespace YARG.Scores
                 DeferredQuery<GameRecord>(
                     $@"SELECT Id, SongChecksum, COUNT(SongChecksum) AS `Count` FROM GameRecords
                     WHERE PlayedWithReplay = 0
+                        AND IsPowerChallenge = 0
                     GROUP BY SongChecksum
                     ORDER BY `Count` DESC
                     LIMIT {maxCount}"
@@ -548,7 +588,8 @@ namespace YARG.Scores
                 @"SELECT GameRecords.SongChecksum, COUNT(GameRecords.Id) AS Count from GameRecords, PlayerScores
                 WHERE PlayerScores.GameRecordId = GameRecords.Id
                     AND PlayerScores.PlayerId = ?
-                    AND PlayerScores.IsReplay = 0";
+                    AND PlayerScores.IsReplay = 0
+                    AND GameRecords.IsPowerChallenge = 0";
 
             var drumInstruments = MidiDrumkitHelper.GetInstruments(profile.GameMode);
             bool useAggregateDrums = drumInstruments != null;
@@ -633,6 +674,7 @@ namespace YARG.Scores
                     WHERE ps.PlayerId = ?
                         AND ps.Instrument = ?{difficultyFilter}
                         AND ps.IsReplay = 0
+                        AND gr.IsPowerChallenge = 0
                 )
                 SELECT * FROM RankedScores WHERE ScoreRank = 1";
 
@@ -695,6 +737,7 @@ namespace YARG.Scores
                     WHERE ps.PlayerId = ?
                         AND ps.Instrument {inClause}{difficultyFilter}
                         AND ps.IsReplay = 0
+                        AND gr.IsPowerChallenge = 0
                 )
                 SELECT * FROM RankedScores WHERE ScoreRank = 1";
 
@@ -721,7 +764,8 @@ namespace YARG.Scores
                 WHERE GameRecords.SongChecksum = ?
                     AND PlayerScores.PlayerId = ?
                     AND PlayerScores.Instrument {inClause}
-                    AND PlayerScores.IsReplay = 0";
+                    AND PlayerScores.IsReplay = 0
+                    AND GameRecords.IsPowerChallenge = 0";
 
             if (highestDifficultyOnly)
             {
@@ -754,7 +798,8 @@ namespace YARG.Scores
                 WHERE GameRecords.SongChecksum = ?
                     AND PlayerScores.PlayerId = ?
                     AND PlayerScores.Instrument {inClause}
-                    AND PlayerScores.IsReplay = 0";
+                    AND PlayerScores.IsReplay = 0
+                    AND GameRecords.IsPowerChallenge = 0";
 
             if (highestDifficultyOnly)
             {
