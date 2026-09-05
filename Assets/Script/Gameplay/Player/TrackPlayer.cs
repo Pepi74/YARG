@@ -237,7 +237,7 @@ namespace YARG.Gameplay.Player
             var events = NoteTrack.TextEvents;
 
             Engine = CreateEngine();
-            base.ComboMeter.Initialize(player.EnginePreset, Engine.BaseParameters.MaxMultiplier, GameManager.Players.Count > 1);
+            base.ComboMeter.Initialize(player.EnginePreset, Engine.BaseParameters.MaxMultiplier, GameManager.Players.Count > 1, Engine.BaseParameters.StarPowerMultiplier);
 
             Engine.OnComboIncrement += OnComboIncrement;
             Engine.OnComboReset += OnComboReset;
@@ -441,7 +441,7 @@ namespace YARG.Gameplay.Player
             int maxMultiplier = Engine.BaseParameters.MaxMultiplier;
             if (stats.IsStarPowerActive)
             {
-                maxMultiplier *= 2;
+                maxMultiplier *= Engine.BaseParameters.StarPowerMultiplier;
             }
 
             double currentStarPowerAmount = Engine.GetStarPowerBarAmount();
