@@ -34,11 +34,11 @@ namespace YARG.Gameplay.Visuals
 
         private TextMeshPro[] _textCache;
 
-        public void Initialize(EnginePreset preset, int maxMultiplier, bool isMultiplayer)
+        public void Initialize(EnginePreset preset, int maxMultiplier, bool isMultiplayer, int starPowerMultiplier = 2)
         {
             _multiplierText.enabled = false;
             _multiplierText.text = string.Empty;
-            _textCache = MultiplierTextHelper.CreateMultiplierTextCache(maxMultiplier, _multiplierText, isMultiplayer);
+            _textCache = MultiplierTextHelper.CreateMultiplierTextCache(maxMultiplier, _multiplierText, isMultiplayer, starPowerMultiplier);
 
             Color color;
 
