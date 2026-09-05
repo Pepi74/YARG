@@ -33,6 +33,7 @@ using YARG.Helpers;
 using YARG.Helpers.Extensions;
 using YARG.Core.Engine;
 using YARG.Settings;
+using YARG.Player;
 
 
 namespace YARG.Menu.ScoreScreen
@@ -51,6 +52,8 @@ namespace YARG.Menu.ScoreScreen
         private TextMeshProUGUI _artistName;
         [SerializeField]
         private StarView _bandStarView;
+        [SerializeField]
+        private PowerChallengeStarCountView _powerChallengeStarView;
         [SerializeField]
         private TextMeshProUGUI _bandScore;
         [FormerlySerializedAs("_bandScoreNotSavedPill")]
@@ -150,7 +153,18 @@ namespace YARG.Menu.ScoreScreen
             }
 
             // Set the band score and stars
-            _bandStarView.SetStars(scoreScreenStats.BandStars);
+            if (GlobalVariables.State.IsPowerChallenge)
+            {
+                _bandStarView.gameObject.SetActive(false);
+                _powerChallengeStarView.gameObject.SetActive(true);
+                _powerChallengeStarView.SetStars(scoreScreenStats.BandStars, YargPlayer.POWER_CHALLENGE_MAX_STARS);
+            }
+            else
+            {
+                _bandStarView.gameObject.SetActive(true);
+                _powerChallengeStarView.gameObject.SetActive(false);
+                _bandStarView.SetStars(scoreScreenStats.BandStars);
+            }
             _bandScore.text = scoreScreenStats.BandScore.ToString("N0");
 
             // Put the scores in!
