@@ -75,7 +75,8 @@ namespace YARG.Menu.MusicLibrary
     public enum MusicLibraryMode
     {
         QuickPlay,
-        Practice
+        Practice,
+        PowerChallenge
     }
 
     public enum MusicLibraryReloadState
@@ -302,11 +303,13 @@ namespace YARG.Menu.MusicLibrary
             {
                 MusicLibraryMode.QuickPlay => Localize.Key("Menu.Main.Options.Quickplay"),
                 MusicLibraryMode.Practice  => Localize.Key("Menu.Main.Options.Practice"),
+                MusicLibraryMode.PowerChallenge => Localize.Key("Menu.Main.Options.PowerChallenge"),
                 _                          => throw new Exception("Unreachable.")
             };
 
             // Set IsPractice as well
             GlobalVariables.State.IsPractice = LibraryMode == MusicLibraryMode.Practice;
+            GlobalVariables.State.IsPowerChallenge = LibraryMode == MusicLibraryMode.PowerChallenge;
             GlobalVariables.State.CurrentReplay = null;
             GlobalVariables.State.PlayingWithReplay = false;
 

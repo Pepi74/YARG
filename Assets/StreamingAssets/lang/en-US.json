@@ -292,12 +292,20 @@
             "DedicatedOpenLane": "Open Note Lane",
             "OpenLaneAlways": "Open Lane Always",
             "OpenLaneWhenCharted": "Open Lane When Charted",
+            "Powers": "Powers",
             "Ready": "Ready",
             "SitOut": "Sit Out",
 			"Disconnect" : "Disconnect",
             "Done": "Done",
             "WarningPlayerNoInputDevice" : "This player has no input device assigned! Assign one from the Profiles menu.",
             "WarningVocalistNoMicrophone" : "This vocalist has no microphone assigned! Assign one from the Profiles menu."
+        },
+        "PowerSelect": {
+            "StarPowerGenerator": "Star Power Generator+",
+            "StarPowerNova": "Star Power Nova+",
+            "StarPowerAmplifier": "Star Power Amplifier+",
+            "MultiplierExtender": "Multiplier Extender+",
+            "None": "None"
         },
         "GameModes": {
             "Options": {
@@ -348,6 +356,8 @@
             "Options": {
                 "Quickplay": "Quickplay",
                 "GameModes": "Game Modes",
+                "PowerChallenge": "Power Challenge",
+                "Practice": "Practice",
                 "Profiles": "Profiles",
                 "Content": "Content",
                 "Settings": "Settings",
