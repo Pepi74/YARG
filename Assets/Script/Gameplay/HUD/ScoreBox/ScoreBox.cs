@@ -74,6 +74,7 @@ namespace YARG.Gameplay.HUD
         private int _bandScore;
         private int _bandCombo;
         private int _bandMultiplier;
+        private float _bandStars = -1f;
 
         private bool _songHasHours;
         private string _songLengthTime;
@@ -168,16 +169,6 @@ namespace YARG.Gameplay.HUD
                 var scoreTextLength = _bandScore == 0 ? 1 : Math.Floor(Math.Log10(_bandScore) + 1);
                 scoreTextLength += Math.Floor((scoreTextLength - 1) / 3); // thousand coma separators
 
-
-                if (GameManager.IsPowerChallenge)
-                {
-                    _powerChallengeStarDisplay.SetStars(GameManager.BandStars);
-                }
-                else
-                {
-                    _starScoreDisplay.SetStars(GameManager.BandStars);
-                }
-
                 // Trigger easter egg
                 if (!_easterEggTriggered && scoreTextLength > _characterCountForBreak)
                 {
@@ -185,6 +176,20 @@ namespace YARG.Gameplay.HUD
                     _overlayImage.sprite = _brokenOverlaySprite;
 
                     _easterEggTriggered = true;
+                }
+            }
+
+            // Speed Freak keeps earning bonus stars from elapsed time even after the score stops changing, so this needs its own check independent of the score-changed check above.
+            if (!Mathf.Approximately(GameManager.BandStars, _bandStars))
+            {
+                _bandStars = GameManager.BandStars;
+                if (GameManager.IsPowerChallenge)
+                {
+                    _powerChallengeStarDisplay.SetStars(_bandStars);
+                }
+                else
+                {
+                    _starScoreDisplay.SetStars(_bandStars);
                 }
             }
 
