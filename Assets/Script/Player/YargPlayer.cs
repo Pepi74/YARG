@@ -38,11 +38,11 @@ namespace YARG.Player
         /// Engine tuning values derived from this player's active Power Challenge modifiers.
         /// Falls back to standard (no-power) values outside of Power Challenge.
         /// </summary>
-        public (int MaxMultiplierBonus, int StarPowerMultiplier, int StarPowerPhraseGainPercent, int StarPowerGeneratorStreakPercent, int NotesPerMultiplierIncrease, int BaseMultiplierOffset, int SpeedFreakBonusThreshold) GetPowerChallengeEngineOptions()
+        public (int MaxMultiplierBonus, int StarPowerMultiplier, int StarPowerPhraseGainPercent, int StarPowerGeneratorStreakPercent, int NotesPerMultiplierIncrease, int BaseMultiplierOffset, int SpeedFreakBonusThreshold, double SpeedFreakBonusSongLength) GetPowerChallengeEngineOptions(double songLength)
         {
             if (!GlobalVariables.State.IsPowerChallenge)
             {
-                return (0, 2, 25, 0, 10, 1, 0);
+                return (0, 2, 25, 0, 10, 1, 0, 0);
             }
 
             bool speedFreak = ActivePowers.HasFlag(PowerChallengeModifiers.SpeedFreak);
@@ -54,18 +54,20 @@ namespace YARG.Player
                 ActivePowers.HasFlag(PowerChallengeModifiers.StarPowerGenerator) ? 10 : 0,
                 speedFreak ? 5 : 10,
                 speedFreak ? 2 : 1,
-                speedFreak ? 3 : 0
+                speedFreak ? 3 : 0,
+                speedFreak ? songLength : 0
             );
         }
 
         public const int POWER_CHALLENGE_MAX_STARS = 21;
         public const int ALL_POWERFUL_MAX_STARS = 26; // 21 +  5 stars of Speed Freak.
+        /// <summary>
+        /// Fraction of the original 4->5 step used for each of the extended range's flat steps (stars 6-20).
+        /// </summary>
+        private const float EXTENDED_RANGE_STEP_FRACTION = 0.9f;
 
         /// <summary>
-        /// Extends a 6-star threshold curve up to <see cref="POWER_CHALLENGE_MAX_STARS"/> stars for Power Challenge.
-        /// Stars 1-3 keep the original thresholds. Stars 4 through <c>firstTierEnd</c> ramp linearly from the
-        /// original 2->3 step up to the original 3->4 step, then stars up to 20 ramp from the 3->4 step up to the
-        /// 4->5 step, and the final star always uses the original 5->6 step (kept as a deliberate "hard" final push).
+        /// Extends a 6-star threshold curve up to <see cref="POWER_CHALLENGE_MAX_STARS"/> stars for Power Challenge. Stars 1-5 keep the exact original (quickplay) thresholds. Stars 6-20 each cost a flat <see cref="EXTENDED_RANGE_STEP_FRACTION"/> of the original 4->5 step, and the final star (21) is a deliberate hard push using the full original 5->6 ("gold star") step.
         /// </summary>
         public static float[] GetStarMultiplierThresholds(float[] baseThresholds)
         {
@@ -75,30 +77,22 @@ namespace YARG.Player
             }
 
             var extended = new float[POWER_CHALLENGE_MAX_STARS];
-            Array.Copy(baseThresholds, extended, baseThresholds.Length);
+            Array.Copy(baseThresholds, extended, baseThresholds.Length - 1);
 
-            float step23 = baseThresholds[^4] - baseThresholds[^5];
-            float step34 = baseThresholds[^3] - baseThresholds[^4];
             float step45 = baseThresholds[^2] - baseThresholds[^3];
             float step56 = baseThresholds[^1] - baseThresholds[^2];
+            float extendedStep = step45 * EXTENDED_RANGE_STEP_FRACTION;
 
-            int lastIndex    = POWER_CHALLENGE_MAX_STARS - 1;
-            int firstTierEnd = lastIndex * 3 / 5;
+            int rampStart = baseThresholds.Length - 1;   // first extended index (star 6)
+            int lastIndex = POWER_CHALLENGE_MAX_STARS - 1;
 
-            int firstTierSteps = firstTierEnd - 3;
-            for (int i = 3; i < firstTierEnd; i++)
+            // Stars 6-20 each cost a fraction of the original 4->5 step.
+            for (int i = rampStart; i < lastIndex; i++)
             {
-                float t = (float) (i - 2) / firstTierSteps;
-                extended[i] = extended[i - 1] + step23 + (step34 - step23) * t;
+                extended[i] = extended[i - 1] + extendedStep;
             }
 
-            int secondTierSteps = lastIndex - firstTierEnd;
-            for (int i = firstTierEnd; i < lastIndex; i++)
-            {
-                float t = (float) (i - firstTierEnd + 1) / secondTierSteps;
-                extended[i] = extended[i - 1] + step34 + (step45 - step34) * t;
-            }
-
+            // Final star: a deliberate hard push, same size as the original 5->6 ("gold star") jump.
             extended[lastIndex] = extended[lastIndex - 1] + step56;
 
             return extended;
