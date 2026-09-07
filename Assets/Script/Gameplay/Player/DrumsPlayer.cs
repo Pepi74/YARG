@@ -207,9 +207,9 @@ namespace YARG.Gameplay.Player
 
             if (!Player.IsReplay)
             {
-                var (maxMultiplierBonus, starPowerMultiplier, starPowerPhraseGainPercent, starPowerGeneratorStreakPercent, notesPerMultiplierIncrease, baseMultiplierOffset, speedFreakBonusThreshold) = Player.GetPowerChallengeEngineOptions();
+                var (maxMultiplierBonus, starPowerMultiplier, starPowerPhraseGainPercent, starPowerGeneratorStreakPercent, notesPerMultiplierIncrease, baseMultiplierOffset, speedFreakBonusThreshold, speedFreakBonusSongLength) = Player.GetPowerChallengeEngineOptions(GameManager.SongLength);
                 // Create the engine params from the engine preset
-                EngineParams = Player.EnginePreset.Drums.Create(YargPlayer.GetStarMultiplierThresholds(StarMultiplierThresholds), YargPlayer.GetStarMultiplierThresholds(SoloBonusStarMultiplierThresholds), mode, maxMultiplierBonus: maxMultiplierBonus, starPowerMultiplier: starPowerMultiplier, starPowerPhraseGainPercent: starPowerPhraseGainPercent, starPowerGeneratorStreakPercent: starPowerGeneratorStreakPercent, notesPerMultiplierIncrease: notesPerMultiplierIncrease, baseMultiplierOffset: baseMultiplierOffset, speedFreakBonusThreshold: speedFreakBonusThreshold);
+                EngineParams = Player.EnginePreset.Drums.Create(YargPlayer.GetStarMultiplierThresholds(StarMultiplierThresholds), YargPlayer.GetStarMultiplierThresholds(SoloBonusStarMultiplierThresholds), mode, maxMultiplierBonus: maxMultiplierBonus, starPowerMultiplier: starPowerMultiplier, starPowerPhraseGainPercent: starPowerPhraseGainPercent, starPowerGeneratorStreakPercent: starPowerGeneratorStreakPercent, notesPerMultiplierIncrease: notesPerMultiplierIncrease, baseMultiplierOffset: baseMultiplierOffset, speedFreakBonusThreshold: speedFreakBonusThreshold, speedFreakBonusSongLength: speedFreakBonusSongLength);
             }
             else
             {
