@@ -149,6 +149,12 @@ namespace YARG.Player
                 return null;
             }
 
+            // Power Challenge requires exactly one player. Refuse to add a second one, whether from an explicit "connect profile" action, a reconnect-on-input event, or auto-connecting on startup.
+            if (GlobalVariables.State.IsPowerChallenge && _players.Count >= 1)
+            {
+                return null;
+            }
+
             var bindings = BindingsContainer.GetBindingsForProfile(profile);
             if (resolveDevices)
             {
