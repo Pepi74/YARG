@@ -920,6 +920,11 @@ namespace YARG.Menu.MusicLibrary
             ShowPlaylist.Clear();
             _ = _previewPlayer.StopPreview();
             StemSettings.ApplySettings = true;
+
+            // Leaving the library entirely (back to the main menu) means leaving whatever mode we were in. These flags are otherwise only ever set in OnEnable, so nothing else resets them.
+            GlobalVariables.State.IsPractice = false;
+            GlobalVariables.State.IsPowerChallenge = false;
+            GlobalVariables.State.IsAllPowerful = false;
             MenuManager.Instance.PopMenu();
         }
 
