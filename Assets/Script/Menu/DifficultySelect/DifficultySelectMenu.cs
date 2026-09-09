@@ -175,8 +175,6 @@ namespace YARG.Menu.DifficultySelect
 
         private readonly List<ModifierItem> _powerItems = new();
 
-        private readonly List<ModifierItem> _powerItems = new();
-
         private List<SongEntry> _songList;
 
         private YargPlayer CurrentPlayer => PlayerContainer.Players[_playerIndex];
@@ -565,44 +563,6 @@ namespace YARG.Menu.DifficultySelect
                     if (optionCount >= 2)
                     {
                         adjustmentsItem.UseSmallBodyText();
-                    }
-                }
-
-                // Power Challenge: pick which powers are active for this song
-                if (GlobalVariables.State.IsPowerChallenge && player.Profile.GameMode != GameMode.Vocals)
-                {
-                    string powersText;
-                    if (GlobalVariables.State.IsAllPowerful)
-                    {
-                        powersText = Localize.Key("Menu.PowerSelect", "AllPowerful");
-                    }
-                    else if (player.ActivePowers == PowerChallengeModifiers.None)
-                    {
-                        powersText = Localize.Key("Menu.PowerSelect", "None");
-                    }
-                    else
-                    {
-                        var names = new List<string>();
-                        foreach (var power in _availablePowers)
-                        {
-                            if (player.ActivePowers.HasFlag(power.Flag))
-                            {
-                                names.Add(Localize.Key("Menu.PowerSelect", power.LocalizationKey));
-                            }
-                        }
-                        powersText = string.Join("\n", names);
-                    }
-
-                    var powersItem = CreateItem(LocalizeHeader("Powers"), powersText, _lastMenuState == State.Powers, () =>
-                    {
-                        _menuState = State.Powers;
-                        UpdateForPlayer();
-                    });
-
-                    // Nothing to pick while All-Powerful is active, so don't let the player enter that screen.
-                    if (GlobalVariables.State.IsAllPowerful)
-                    {
-                        powersItem.Interactable = false;
                     }
                 }
 
