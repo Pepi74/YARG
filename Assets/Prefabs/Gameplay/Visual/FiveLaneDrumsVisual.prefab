@@ -48,6 +48,14 @@ PrefabInstance:
       propertyPath: HighwayCameraRendering
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 5494856007075818134, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
+      propertyPath: StreakGuardianBonusMeter
+      value: 
+      objectReference: {fileID: 3954981468532491237}
+    - target: {fileID: 5494856007075818134, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
+      propertyPath: StreakGuardianShieldIndicator
+      value: 
+      objectReference: {fileID: 5218183226204859231}
     - target: {fileID: 7353099902729507025, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
       propertyPath: FretCount
       value: 5
@@ -142,6 +150,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2fba99a1a0d12447a77c2de997f6327, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.SpeedFreakBonusMeter
+--- !u!114 &3954981468532491237 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3683832529277976272, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
+  m_PrefabInstance: {fileID: 431624946335464757}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89998d4f32bbc934e8e9e91800fa37a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.StreakGuardianBonusMeter
 --- !u!114 &5033710389779100764 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4622422148554443113, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
@@ -153,6 +172,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 456de9da9402485898933258ffa9558a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &5218183226204859231 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5591154501333685866, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
+  m_PrefabInstance: {fileID: 431624946335464757}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279c2765e6e97724ebe1262c8a7cce98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.StreakGuardianShieldIndicator
 --- !u!114 &8022842290628306130 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7686426392671820263, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
