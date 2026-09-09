@@ -12,7 +12,7 @@ namespace YARG.Player
         StarPowerAmplifier = 1 << 3, // Fills the entire Star Power bar from a single phrase (100%, up from the default 25%).
         StarPowerNova      = 1 << 4, // Increases the Star Power score multiplier to x6.
         MultiplierExtender = 1 << 5, // Raises the max score multiplier (BaseMaxMultiplier + 2).
-        StreakGuardian     = 1 << 6, // Not implemented yet.
+        StreakGuardian     = 1 << 6, // 2 rechargeable shields (1s cooldown each) preserve Combo through a miss or overstrum; a shielded miss still blocks guitar hammer-ons, a shielded overstrum doesn't. Also grants up to 5 bonus stars for reaching a chain of chart-length-scaled uninterrupted note-streak tiers.
         Resurrector        = 1 << 7, // Not implemented yet.
     }
 }

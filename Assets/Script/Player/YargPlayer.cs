@@ -38,11 +38,11 @@ namespace YARG.Player
         /// Engine tuning values derived from this player's active Power Challenge modifiers.
         /// Falls back to standard (no-power) values outside of Power Challenge.
         /// </summary>
-        public (int MaxMultiplierBonus, int StarPowerMultiplier, int StarPowerPhraseGainPercent, int StarPowerGeneratorStreakPercent, int NotesPerMultiplierIncrease, int BaseMultiplierOffset, int SpeedFreakBonusThreshold, double SpeedFreakBonusSongLength) GetPowerChallengeEngineOptions(double songLength)
+        public (int MaxMultiplierBonus, int StarPowerMultiplier, int StarPowerPhraseGainPercent, int StarPowerGeneratorStreakPercent, int NotesPerMultiplierIncrease, int BaseMultiplierOffset, int SpeedFreakBonusThreshold, double SpeedFreakBonusSongLength, int StreakGuardianMaxShields) GetPowerChallengeEngineOptions(double songLength)
         {
             if (!GlobalVariables.State.IsPowerChallenge)
             {
-                return (0, 2, 25, 0, 10, 1, 0, 0);
+                return (0, 2, 25, 0, 10, 1, 0, 0, 0);
             }
 
             bool speedFreak = ActivePowers.HasFlag(PowerChallengeModifiers.SpeedFreak);
@@ -55,12 +55,13 @@ namespace YARG.Player
                 speedFreak ? 5 : 10,
                 speedFreak ? 2 : 1,
                 speedFreak ? 3 : 0,
-                speedFreak ? songLength : 0
+                speedFreak ? songLength : 0,
+                ActivePowers.HasFlag(PowerChallengeModifiers.StreakGuardian) ? 2 : 0
             );
         }
 
         public const int POWER_CHALLENGE_MAX_STARS = 21;
-        public const int ALL_POWERFUL_MAX_STARS = 26; // 21 +  5 stars of Speed Freak.
+        public const int ALL_POWERFUL_MAX_STARS = 31; // 21 + 5 stars of Speed Freak + 5 stars of Streak Guardian.
         /// <summary>
         /// Fraction of the original 4->5 step used for each of the extended range's flat steps (stars 6-20).
         /// </summary>
