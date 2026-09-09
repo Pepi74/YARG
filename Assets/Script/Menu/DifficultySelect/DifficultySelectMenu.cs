@@ -154,6 +154,7 @@ namespace YARG.Menu.DifficultySelect
             new(nameof(PowerChallengeModifiers.StarPowerAmplifier), PowerChallengeModifiers.StarPowerAmplifier),
             new(nameof(PowerChallengeModifiers.StarPowerNova), PowerChallengeModifiers.StarPowerNova),
             new(nameof(PowerChallengeModifiers.MultiplierExtender), PowerChallengeModifiers.MultiplierExtender),
+            new(nameof(PowerChallengeModifiers.StreakGuardian), PowerChallengeModifiers.StreakGuardian),
         };
 
         // Every currently implemented power, combined. Used to force All-Powerful's loadout. Update this whenever a new power gets implemented.
@@ -161,7 +162,8 @@ namespace YARG.Menu.DifficultySelect
         PowerChallengeModifiers.StarPowerGenerator |
         PowerChallengeModifiers.StarPowerAmplifier |
         PowerChallengeModifiers.StarPowerNova |
-        PowerChallengeModifiers.MultiplierExtender;
+        PowerChallengeModifiers.MultiplierExtender |
+        PowerChallengeModifiers.StreakGuardian;
 
         [NonSerialized]
         private Modifier _excusableModifiers;
@@ -570,6 +572,7 @@ namespace YARG.Menu.DifficultySelect
                 if (GlobalVariables.State.IsPowerChallenge && player.Profile.GameMode != GameMode.Vocals)
                 {
                     string powersText;
+                    int activeCount = 0;
                     if (GlobalVariables.State.IsAllPowerful)
                     {
                         powersText = Localize.Key("Menu.PowerSelect", "AllPowerful");
@@ -589,6 +592,7 @@ namespace YARG.Menu.DifficultySelect
                             }
                         }
                         powersText = string.Join("\n", names);
+                        activeCount = names.Count;
                     }
 
                     var powersItem = CreateItem(LocalizeHeader("Powers"), powersText, _lastMenuState == State.Powers, () =>
@@ -596,6 +600,12 @@ namespace YARG.Menu.DifficultySelect
                         _menuState = State.Powers;
                         UpdateForPlayer();
                     });
+
+                    // Same idea as Adjustments: with 2 active powers the summary is two lines, so drop to the header size to keep the row compact.
+                    if (activeCount >= 2)
+                    {
+                        powersItem.UseSmallBodyText();
+                    }
 
                     // Nothing to pick while All-Powerful is active, so don't let the player enter that screen.
                     if (GlobalVariables.State.IsAllPowerful)
@@ -1080,7 +1090,7 @@ namespace YARG.Menu.DifficultySelect
             }
 
             // Done button
-            CreateItem(LocalizeHeader("Done"), _difficultyGreenPrefab, () =>
+            CreateDoneItem(() =>
             {
                 _menuState = State.Main;
                 UpdateForPlayer();
