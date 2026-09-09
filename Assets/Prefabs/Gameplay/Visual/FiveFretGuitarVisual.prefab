@@ -355,6 +355,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6050702919009568949, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}
   m_PrefabInstance: {fileID: 7434902305530561920}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4414488312154847548 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6516002749979278524, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}
+  m_PrefabInstance: {fileID: 7434902305530561920}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89998d4f32bbc934e8e9e91800fa37a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.StreakGuardianBonusMeter
 --- !u!114 &4842075834887986663 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2602119680426612839, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}
@@ -371,6 +382,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2647690867028395734, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}
   m_PrefabInstance: {fileID: 7434902305530561920}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &4885058645247398278 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2658569319642682374, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}
+  m_PrefabInstance: {fileID: 7434902305530561920}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279c2765e6e97724ebe1262c8a7cce98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.StreakGuardianShieldIndicator
 --- !u!114 &5015223353156281294 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2501665274994779726, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}
@@ -439,6 +461,8 @@ MonoBehaviour:
   ComboMeter: {fileID: 5015223353156281294}
   StarpowerBar: {fileID: 3700759359327549745}
   SpeedFreakBonusMeter: {fileID: 3024295744284896318}
+  StreakGuardianBonusMeter: {fileID: 4414488312154847548}
+  StreakGuardianShieldIndicator: {fileID: 4885058645247398278}
   SunburstEffects: {fileID: 1442216845985701587}
   IndicatorStripes: {fileID: 7617442645122152992}
   HitWindowDisplay: {fileID: 7275388750557486603}

@@ -53,6 +53,10 @@ namespace YARG.Gameplay.Player
         [SerializeField]
         protected SpeedFreakBonusMeter SpeedFreakBonusMeter;
         [SerializeField]
+        protected StreakGuardianBonusMeter StreakGuardianBonusMeter;
+        [SerializeField]
+        protected StreakGuardianShieldIndicator StreakGuardianShieldIndicator;
+        [SerializeField]
         protected SunburstEffects SunburstEffects;
         [SerializeField]
         protected IndicatorStripes IndicatorStripes;
@@ -92,6 +96,8 @@ namespace YARG.Gameplay.Player
         protected float SongLength;
 
         protected LaneElement[] BRELanes;
+
+        protected readonly bool[] _streakGuardianShieldCharged = new bool[2];
 
         public virtual void Initialize(int index, YargPlayer player, SongChart chart, TrackView trackView,
             StemMixer mixer, int? lastHighScore)
@@ -466,6 +472,8 @@ namespace YARG.Gameplay.Player
 
             ComboMeter.SetCombo(stats.ScoreMultiplier, displayMultiplier, maxMultiplier, stats.Combo, Engine.CodaHasStarted);
             UpdateSpeedFreakBonusMeter(stats);
+            UpdateStreakGuardianBonusMeter(stats);
+            UpdateStreakGuardianShieldIndicator(stats);
             StarpowerBar.SetStarpower(currentStarPowerAmount, stats.IsStarPowerActive, Engine.CodaHasStarted);
             StarpowerBar.UpdateFlash(GameManager.BeatEventHandler.Visual.StrongBeat.CurrentPercentage);
             SunburstEffects.SetSunburstEffects(groove, stats.IsStarPowerActive, _currentMultiplier);
@@ -540,6 +548,45 @@ namespace YARG.Gameplay.Player
             }
 
             SpeedFreakBonusMeter.SetProgress(stats.SpeedFreakBonusProgress);
+        }
+
+        private void UpdateStreakGuardianBonusMeter(BaseStats stats)
+        {
+            bool streakGuardianActive = stats.StreakGuardianMaxShields > 0;
+            bool streakGuardianMaxedOut = stats.StreakGuardianBonusStars >= 5;
+            bool starsMaxedOut = stats.Stars >= GameManager.PowerChallengeMaxStars;
+
+            if (streakGuardianMaxedOut)
+            {
+                StreakGuardianBonusMeter.HideAtFull();
+                return;
+            }
+
+            if (!streakGuardianActive || starsMaxedOut)
+            {
+                StreakGuardianBonusMeter.Hide();
+                return;
+            }
+
+            StreakGuardianBonusMeter.SetProgress(stats.StreakGuardianTierProgressFraction);
+        }
+
+        private void UpdateStreakGuardianShieldIndicator(BaseStats stats)
+        {
+            bool streakGuardianActive = stats.StreakGuardianMaxShields > 0;
+            StreakGuardianShieldIndicator.gameObject.SetActive(streakGuardianActive);
+
+            if (!streakGuardianActive)
+            {
+                return;
+            }
+
+            for (int i = 0; i < stats.StreakGuardianMaxShields; i++)
+            {
+                _streakGuardianShieldCharged[i] = Engine.IsStreakGuardianShieldCharged(i);
+            }
+
+            StreakGuardianShieldIndicator.SetShieldStates(_streakGuardianShieldCharged);
         }
 
         private void UpdateNotes(double visualTime)
