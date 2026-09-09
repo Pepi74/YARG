@@ -341,6 +341,7 @@ namespace YARG.Menu.DifficultySelect
                     break;
                 case State.Accessibility:
                     CreateAccessibilityMenu();
+                    break;
                 case State.Powers:
                     CreatePowersMenu();
                     break;
@@ -1051,6 +1052,7 @@ namespace YARG.Menu.DifficultySelect
 
             text = text.Trim();
             return text.Length == 0 ? Modifier.None.ToLocalizedName() : text;
+        }
         private void CreatePowersMenu()
         {
             var player = CurrentPlayer;
