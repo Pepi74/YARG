@@ -315,6 +315,7 @@
                 "Name": "Game Modes",
                 "CareerList": "Careers",
                 "Practice": "Practice",
+                "PowerChallenge": "Power Challenge",
                 "History": "History",
                 "Back": "Main Menu"
             },
@@ -359,8 +360,6 @@
             "Options": {
                 "Quickplay": "Quickplay",
                 "GameModes": "Game Modes",
-                "PowerChallenge": "Power Challenge",
-                "Practice": "Practice",
                 "Profiles": "Profiles",
                 "Content": "Content",
                 "Settings": "Settings",

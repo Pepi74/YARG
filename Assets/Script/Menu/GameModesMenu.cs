@@ -5,6 +5,7 @@ using YARG.Menu.Career;
 using YARG.Menu.MusicLibrary;
 using YARG.Menu.Navigation;
 using YARG.Menu.Persistent;
+using YARG.Player;
 
 namespace YARG.Menu
 {
@@ -12,6 +13,16 @@ namespace YARG.Menu
     {
         [SerializeField]
         private TextMeshProUGUI _versionText;
+
+        [SerializeField]
+        private GameObject _powerChallengeButton;
+
+        private NavigatableBehaviour _powerChallengeNavigatable;
+
+        private void Awake()
+        {
+            _powerChallengeNavigatable = _powerChallengeButton.GetComponent<NavigatableBehaviour>();
+        }
 
         private void Start()
         {
@@ -28,6 +39,32 @@ namespace YARG.Menu
                 NavigationScheme.Entry.NavigateDown,
                 new NavigationScheme.Entry(MenuAction.Red, "Menu.Common.Back", () => MenuManager.Instance.PopMenu())
             }, true));
+
+            PlayerContainer.PlayerAdded += OnPlayerCountChanged;
+            PlayerContainer.PlayerRemoved += OnPlayerCountChanged;
+
+            UpdatePowerChallengeAvailability();
+        }
+
+        private void OnPlayerCountChanged(YargPlayer player)
+        {
+            UpdatePowerChallengeAvailability();
+        }
+
+        private void UpdatePowerChallengeAvailability()
+        {
+            bool available = PlayerContainer.Players.Count == 1;
+            if (_powerChallengeButton.activeSelf == available)
+            {
+                return;
+            }
+
+            if (!available)
+            {
+                _powerChallengeNavigatable.SetSelected(false, SelectionOrigin.Programmatically);
+            }
+
+            _powerChallengeButton.SetActive(available);
         }
 
         public void CareerList()
@@ -45,6 +82,15 @@ namespace YARG.Menu
             menu.gameObject.SetActive(true);
         }
 
+        public void PowerChallenge()
+        {
+            var menu = MenuManager.Instance.PushMenu(MenuManager.Menu.MusicLibrary, false);
+
+            MusicLibraryMenu.LibraryMode = MusicLibraryMode.PowerChallenge;
+
+            menu.gameObject.SetActive(true);
+        }
+
         public void Replays()
         {
             MenuManager.Instance.PushMenu(MenuManager.Menu.History);
@@ -58,6 +104,9 @@ namespace YARG.Menu
         private void OnDisable()
         {
             Navigator.Instance?.PopScheme();
+
+            PlayerContainer.PlayerAdded -= OnPlayerCountChanged;
+            PlayerContainer.PlayerRemoved -= OnPlayerCountChanged;
         }
     }
 }

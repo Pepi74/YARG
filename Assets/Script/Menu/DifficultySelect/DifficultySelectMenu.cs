@@ -186,8 +186,12 @@ namespace YARG.Menu.DifficultySelect
 
         private void OnEnable()
         {
-            string subHeaderKey = GlobalVariables.State.IsPractice ? "Practice" : GlobalVariables.State.IsPowerChallenge ? "PowerChallenge" : "Quickplay";
-            _subHeader.text = Localize.Key("Menu.Main.Options", subHeaderKey);
+            string subHeaderKey = GlobalVariables.State.IsPractice
+                ? "Menu.GameModes.Options.Practice"
+                : GlobalVariables.State.IsPowerChallenge
+                    ? "Menu.GameModes.Options.PowerChallenge"
+                    : "Menu.Main.Options.Quickplay";
+            _subHeader.text = Localize.Key(subHeaderKey);
 
             // Set navigation scheme
             _ = Navigator.Instance.PushScheme(new NavigationScheme(new()

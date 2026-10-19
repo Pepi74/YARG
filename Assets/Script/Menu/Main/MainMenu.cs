@@ -5,7 +5,6 @@ using YARG.Menu.MusicLibrary;
 using YARG.Menu.Navigation;
 using YARG.Menu.Persistent;
 using YARG.Menu.Settings;
-using YARG.Player;
 using YARG.Settings;
 
 namespace YARG.Menu.Main
@@ -16,18 +15,6 @@ namespace YARG.Menu.Main
 
         [SerializeField]
         private TextMeshProUGUI _versionText;
-
-        [SerializeField]
-        private GameObject _powerChallengeButton;
-
-        private NavigatableBehaviour _powerChallengeNavigatable;
-
-        private bool _started;
-
-        private void Awake()
-        {
-            _powerChallengeNavigatable = _powerChallengeButton.GetComponent<NavigatableBehaviour>();
-        }
 
         private void Start()
         {
@@ -52,9 +39,6 @@ namespace YARG.Menu.Main
             {
                 SettingsMenu.Instance.gameObject.SetActive(true);
             }
-
-            _started = true;
-            UpdatePowerChallengeAvailability();
         }
 
         private void OnEnable()
@@ -67,43 +51,11 @@ namespace YARG.Menu.Main
                 NavigationScheme.Entry.NavigateDown,
                 new NavigationScheme.Entry(MenuAction.Select, "Menu.Main.GoToCurrentlyPlaying", CurrentlyPlaying)
             }, true));
-
-            PlayerContainer.PlayerAdded += OnPlayerCountChanged;
-            PlayerContainer.PlayerRemoved += OnPlayerCountChanged;
-
-            if (_started)
-            {
-                UpdatePowerChallengeAvailability();
-            }
         }
 
         private void OnDisable()
         {
             Navigator.Instance?.PopScheme();
-
-            PlayerContainer.PlayerAdded -= OnPlayerCountChanged;
-            PlayerContainer.PlayerRemoved -= OnPlayerCountChanged;
-        }
-
-        private void OnPlayerCountChanged(YargPlayer player)
-        {
-            UpdatePowerChallengeAvailability();
-        }
-
-        private void UpdatePowerChallengeAvailability()
-        {
-            bool available = PlayerContainer.Players.Count == 1;
-            if (_powerChallengeButton.activeSelf == available)
-            {
-                return;
-            }
-
-            if (!available)
-            {
-                _powerChallengeNavigatable.SetSelected(false, SelectionOrigin.Programmatically);
-            }
-
-            _powerChallengeButton.SetActive(available);
         }
 
         public void CurrentlyPlaying()

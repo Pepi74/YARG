@@ -302,8 +302,8 @@ namespace YARG.Menu.MusicLibrary
             _subHeader.text = LibraryMode switch
             {
                 MusicLibraryMode.QuickPlay => Localize.Key("Menu.Main.Options.Quickplay"),
-                MusicLibraryMode.Practice  => Localize.Key("Menu.Main.Options.Practice"),
-                MusicLibraryMode.PowerChallenge => Localize.Key("Menu.Main.Options.PowerChallenge"),
+                MusicLibraryMode.Practice  => Localize.Key("Menu.GameModes.Options.Practice"),
+                MusicLibraryMode.PowerChallenge => Localize.Key("Menu.GameModes.Options.PowerChallenge"),
                 _                          => throw new Exception("Unreachable.")
             };
 
