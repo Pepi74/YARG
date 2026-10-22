@@ -19,6 +19,8 @@ namespace YARG.Menu
 
         private NavigatableBehaviour _powerChallengeNavigatable;
 
+        private bool _started;
+
         private void Awake()
         {
             _powerChallengeNavigatable = _powerChallengeButton.GetComponent<NavigatableBehaviour>();
@@ -27,6 +29,9 @@ namespace YARG.Menu
         private void Start()
         {
             _versionText.text = GlobalVariables.Instance.CurrentVersion;
+
+            _started = true;
+            UpdatePowerChallengeAvailability();
         }
 
         private void OnEnable()
@@ -43,7 +48,10 @@ namespace YARG.Menu
             PlayerContainer.PlayerAdded += OnPlayerCountChanged;
             PlayerContainer.PlayerRemoved += OnPlayerCountChanged;
 
-            UpdatePowerChallengeAvailability();
+            if (_started)
+            {
+                UpdatePowerChallengeAvailability();
+            }
         }
 
         private void OnPlayerCountChanged(YargPlayer player)
