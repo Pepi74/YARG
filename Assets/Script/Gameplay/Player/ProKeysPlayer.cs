@@ -126,9 +126,9 @@ namespace YARG.Gameplay.Player
         {
             if (!Player.IsReplay)
             {
-                var (maxMultiplierBonus, starPowerMultiplier, starPowerPhraseGainPercent, starPowerGeneratorStreakPercent, notesPerMultiplierIncrease, baseMultiplierOffset, speedFreakBonusThreshold, speedFreakBonusSongLength, streakGuardianMaxShields) = Player.GetPowerChallengeEngineOptions(GameManager.SongLength);
+                var (maxMultiplierBonus, starPowerMultiplier, starPowerPhraseGainPercent, starPowerGeneratorStreakPercent, notesPerMultiplierIncrease, baseMultiplierOffset, speedFreakBonusThreshold, speedFreakBonusSongLength, streakGuardianMaxShields, crowdHyperChartFraction) = Player.GetPowerChallengeEngineOptions(GameManager.SongLength);
                 // Create the engine params from the engine preset
-                EngineParams = Player.EnginePreset.ProKeys.Create(YargPlayer.GetStarMultiplierThresholds(StarMultiplierThresholds), YargPlayer.GetStarMultiplierThresholds(SoloBonusStarMultiplierThresholds), false, maxMultiplierBonus: maxMultiplierBonus, starPowerMultiplier: starPowerMultiplier, starPowerPhraseGainPercent: starPowerPhraseGainPercent, starPowerGeneratorStreakPercent: starPowerGeneratorStreakPercent, notesPerMultiplierIncrease: notesPerMultiplierIncrease, baseMultiplierOffset: baseMultiplierOffset, speedFreakBonusThreshold: speedFreakBonusThreshold, speedFreakBonusSongLength: speedFreakBonusSongLength, streakGuardianMaxShields: streakGuardianMaxShields);
+                EngineParams = Player.EnginePreset.ProKeys.Create(YargPlayer.GetStarMultiplierThresholds(StarMultiplierThresholds), YargPlayer.GetStarMultiplierThresholds(SoloBonusStarMultiplierThresholds), false, maxMultiplierBonus: maxMultiplierBonus, starPowerMultiplier: starPowerMultiplier, starPowerPhraseGainPercent: starPowerPhraseGainPercent, starPowerGeneratorStreakPercent: starPowerGeneratorStreakPercent, notesPerMultiplierIncrease: notesPerMultiplierIncrease, baseMultiplierOffset: baseMultiplierOffset, speedFreakBonusThreshold: speedFreakBonusThreshold, speedFreakBonusSongLength: speedFreakBonusSongLength, streakGuardianMaxShields: streakGuardianMaxShields, crowdHyperChartFraction: crowdHyperChartFraction);
             }
             else
             {

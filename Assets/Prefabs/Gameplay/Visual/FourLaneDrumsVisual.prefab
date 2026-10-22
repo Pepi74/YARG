@@ -357,6 +357,7 @@ MonoBehaviour:
   SpeedFreakBonusMeter: {fileID: 2856556932685999058}
   StreakGuardianBonusMeter: {fileID: 3683832529277976272}
   StreakGuardianShieldIndicator: {fileID: 5591154501333685866}
+  CrowdHyperBonusMeter: {fileID: 7533382635817426285}
   SunburstEffects: {fileID: 1900302462358772031}
   IndicatorStripes: {fileID: 7487907470461173196}
   HitWindowDisplay: {fileID: 7686426392671820263}
@@ -370,6 +371,17 @@ MonoBehaviour:
   _fiveLaneMode: 0
   _fretArray: {fileID: 7353099902729507025}
   _kickFretFlash: {fileID: 5135833070940009271}
+--- !u!114 &7533382635817426285 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 142167159632666369, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}
+  m_PrefabInstance: {fileID: 7598390404892836460}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db4196e71573da644b5941881dcf0898, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.CrowdHyperBonusMeter
 --- !u!114 &7686426392671820263 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 277336160789584779, guid: 5800c42510b55c549be95ec3ecd75e1c, type: 3}

@@ -151,6 +151,7 @@ namespace YARG.Menu.DifficultySelect
         {
             new(nameof(PowerChallengeModifiers.SpeedFreak), PowerChallengeModifiers.SpeedFreak),
             new(nameof(PowerChallengeModifiers.StarPowerGenerator), PowerChallengeModifiers.StarPowerGenerator),
+            new(nameof(PowerChallengeModifiers.CrowdHyper), PowerChallengeModifiers.CrowdHyper),
             new(nameof(PowerChallengeModifiers.StarPowerAmplifier), PowerChallengeModifiers.StarPowerAmplifier),
             new(nameof(PowerChallengeModifiers.StarPowerNova), PowerChallengeModifiers.StarPowerNova),
             new(nameof(PowerChallengeModifiers.MultiplierExtender), PowerChallengeModifiers.MultiplierExtender),
@@ -163,7 +164,8 @@ namespace YARG.Menu.DifficultySelect
         PowerChallengeModifiers.StarPowerAmplifier |
         PowerChallengeModifiers.StarPowerNova |
         PowerChallengeModifiers.MultiplierExtender |
-        PowerChallengeModifiers.StreakGuardian;
+        PowerChallengeModifiers.StreakGuardian |
+        PowerChallengeModifiers.CrowdHyper;
 
         [NonSerialized]
         private Modifier _excusableModifiers;

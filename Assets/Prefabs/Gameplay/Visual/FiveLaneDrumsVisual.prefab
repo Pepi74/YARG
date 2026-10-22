@@ -37,6 +37,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 679127719091478763}
     - target: {fileID: 5494856007075818134, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
+      propertyPath: CrowdHyperBonusMeter
+      value: 
+      objectReference: {fileID: 7887635893244911704}
+    - target: {fileID: 5494856007075818134, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
       propertyPath: SpeedFreakBonusMeter
       value: 
       objectReference: {fileID: 2475282146280347367}
@@ -183,6 +187,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 279c2765e6e97724ebe1262c8a7cce98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.StreakGuardianShieldIndicator
+--- !u!114 &7887635893244911704 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7533382635817426285, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}
+  m_PrefabInstance: {fileID: 431624946335464757}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db4196e71573da644b5941881dcf0898, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::YARG.Gameplay.Visuals.CrowdHyperBonusMeter
 --- !u!114 &8022842290628306130 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7686426392671820263, guid: 14dfc37fcbd6e0c4ba41507437a52fea, type: 3}

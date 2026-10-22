@@ -226,6 +226,8 @@ namespace YARG.Gameplay.Player
         [SerializeField]
         protected StreakGuardianShieldIndicator StreakGuardianShieldIndicator;
         [SerializeField]
+        protected CrowdHyperBonusMeter CrowdHyperBonusMeter;
+        [SerializeField]
         protected SunburstEffects SunburstEffects;
         [SerializeField]
         protected IndicatorStripes IndicatorStripes;
@@ -708,6 +710,7 @@ namespace YARG.Gameplay.Player
             UpdateSpeedFreakBonusMeter(stats);
             UpdateStreakGuardianBonusMeter(stats);
             UpdateStreakGuardianShieldIndicator(stats);
+            UpdateCrowdHyperBonusMeter(stats);
             StarpowerBar.SetStarpower(currentStarPowerAmount, stats.IsStarPowerActive, Engine.CodaHasStarted);
             StarpowerBar.UpdateFlash(GameManager.BeatEventHandler.Visual.StrongBeat.CurrentPercentage);
             SunburstEffects.SetSunburstEffects(groove, stats.IsStarPowerActive, _currentMultiplier);
@@ -803,6 +806,27 @@ namespace YARG.Gameplay.Player
             }
 
             StreakGuardianBonusMeter.SetProgress(stats.StreakGuardianTierProgressFraction);
+        }
+
+        private void UpdateCrowdHyperBonusMeter(BaseStats stats)
+        {
+            bool crowdHyperActive = stats.CrowdHyperOverflowPerStar > 0;
+            bool crowdHyperMaxedOut = stats.CrowdHyperBonusStars >= 5;
+            bool starsMaxedOut = stats.Stars >= GameManager.PowerChallengeMaxStars;
+
+            if (crowdHyperMaxedOut)
+            {
+                CrowdHyperBonusMeter.HideAtFull();
+                return;
+            }
+
+            if (!crowdHyperActive || starsMaxedOut)
+            {
+                CrowdHyperBonusMeter.Hide();
+                return;
+            }
+
+            CrowdHyperBonusMeter.SetProgress(stats.CrowdHyperOverflowProgress);
         }
 
         private void UpdateStreakGuardianShieldIndicator(BaseStats stats)
