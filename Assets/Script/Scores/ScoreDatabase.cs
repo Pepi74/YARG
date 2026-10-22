@@ -314,7 +314,9 @@ namespace YARG.Scores
         public List<GameRecord> QueryAllScoresByDate()
         {
             // We don't check for WasPlayedWithReplay here because this is only used by the history menu
-            // NOTE: every read query below filters IsPowerChallenge = 0. Power Challenge scores are recorded but intentionally excluded from normal history/leaderboards.
+            // NOTE: every read query below filters IsPowerChallenge = 0, except QueryAllPlayerScoreRecords: its rows only
+            // surface through game records, which are already filtered. Power Challenge scores are recorded but intentionally
+            // excluded from normal history/leaderboards.
             return Query<GameRecord>(
                 @"SELECT * FROM GameRecords
                 WHERE IsPowerChallenge = 0
@@ -326,7 +328,6 @@ namespace YARG.Scores
         {
             return Query<PlayerScoreRecord>(
                 @"SELECT * FROM PlayerScores
-                WHERE IsPowerChallenge = 0
                 ORDER BY Id;"
             );
         }
